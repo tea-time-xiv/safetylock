@@ -43,6 +43,12 @@ public sealed class Plugin : IDalamudPlugin
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
+        // Apply EnableOnStartup setting
+        if (Configuration.EnableOnStartup)
+        {
+            Configuration.ChildLockEnabled = true;
+            Configuration.Save();
+        }
 
         // You might normally want to embed resources and load them from the manifest stream
         var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");

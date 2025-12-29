@@ -56,6 +56,20 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
         ImGui.Spacing();
         
+        // Enable on startup checkbox
+        var enableOnStartup = configuration.EnableOnStartup;
+        if (ImGui.Checkbox("Enable Child Lock on startup", ref enableOnStartup))
+        {
+            configuration.EnableOnStartup = enableOnStartup;
+            configuration.Save();
+        }
+        
+        ImGui.TextWrapped("Automatically enables Child Lock when the plugin loads.");
+        
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+        
         // Blocked Features section
         ImGui.TextUnformatted("Blocked Features:");
         ImGui.Spacing();

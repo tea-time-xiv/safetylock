@@ -13,6 +13,7 @@ public class Configuration : IPluginConfiguration
 
     // Child Lock
     public bool ChildLockEnabled { get; set; } = false;
+    public bool EnableOnStartup { get; set; } = false;
 
     // Feature toggles
     public bool BlockVendors { get; set; } = true;
