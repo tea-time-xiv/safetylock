@@ -30,6 +30,7 @@ public sealed class Plugin : IDalamudPlugin
     private MainWindow MainWindow { get; init; }
     private VendorWatcher VendorWatcher { get; init; }
     private DutyFinderWatcher DutyFinderWatcher { get; init; }
+    private QuestWatcher QuestWatcher { get; init; }
 
     public Plugin()
     {
@@ -50,6 +51,9 @@ public sealed class Plugin : IDalamudPlugin
 
         // Initialize duty finder watcher
         DutyFinderWatcher = new DutyFinderWatcher(AddonLifecycle, ChatGui, Configuration);
+
+        // Initialize quest watcher
+        QuestWatcher = new QuestWatcher(AddonLifecycle, ChatGui, Configuration);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
@@ -90,6 +94,7 @@ public sealed class Plugin : IDalamudPlugin
         MainWindow.Dispose();
         VendorWatcher.Dispose();
         DutyFinderWatcher.Dispose();
+        QuestWatcher.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
         CommandManager.RemoveHandler(ChildLockCommandName);
