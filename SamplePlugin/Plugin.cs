@@ -29,6 +29,7 @@ public sealed class Plugin : IDalamudPlugin
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
     private VendorWatcher VendorWatcher { get; init; }
+    private DutyFinderWatcher DutyFinderWatcher { get; init; }
 
     public Plugin()
     {
@@ -46,6 +47,9 @@ public sealed class Plugin : IDalamudPlugin
 
         // Initialize vendor watcher
         VendorWatcher = new VendorWatcher(AddonLifecycle, ChatGui, Configuration);
+
+        // Initialize duty finder watcher
+        DutyFinderWatcher = new DutyFinderWatcher(AddonLifecycle, ChatGui, Configuration);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
@@ -85,6 +89,7 @@ public sealed class Plugin : IDalamudPlugin
         ConfigWindow.Dispose();
         MainWindow.Dispose();
         VendorWatcher.Dispose();
+        DutyFinderWatcher.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
         CommandManager.RemoveHandler(ChildLockCommandName);
