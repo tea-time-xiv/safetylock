@@ -1,0 +1,11 @@
+﻿name: Child Safety Lock
+author: frituurpan
+punchline: "Soft Child Safety Lock to prevent accidental in-game interactions"
+description: "Blocks vendor windows, duty finder interactions, and quest acceptance dialogs when enabled. Use /childlock to toggle. Features enable-on-startup and individual feature toggles."
+repo_url: https://github.com/frituurpan/SafetyLockPlugin
+icon_url: https://raw.githubusercontent.com/frituurpan/SafetyLockPlugin/master/images/icon.png
+tags:
+    - safety
+    - utility
+category_tags:
+    - ui

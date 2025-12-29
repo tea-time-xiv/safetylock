@@ -11,5 +11,6 @@
       <Content Include="images\icon.png">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <Content Include="SafetyLockPlugin.yaml" />
     </ItemGroup>
 </Project>
