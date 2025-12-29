@@ -37,7 +37,7 @@ public sealed class Plugin : IDalamudPlugin
     private QuestWatcher QuestWatcher { get; init; }
 
     // Track spam command executions
-    private readonly List<DateTime> _spamCommandTimestamps = new();
+    private readonly List<DateTime> spamCommandTimestamps = new();
 
     public Plugin()
     {
@@ -49,11 +49,8 @@ public sealed class Plugin : IDalamudPlugin
             Configuration.ChildLockEnabled = true;
         }
 
-        // You might normally want to embed resources and load them from the manifest stream
-        var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
-
         ConfigWindow = new ConfigWindow(this);
-        MainWindow = new MainWindow(this, goatImagePath);
+        MainWindow = new MainWindow(this);
 
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
@@ -143,13 +140,13 @@ public sealed class Plugin : IDalamudPlugin
         var fiveSecondsAgo = now.AddSeconds(-5);
         
         // Remove timestamps older than 5 seconds
-        _spamCommandTimestamps.RemoveAll(t => t < fiveSecondsAgo);
+        spamCommandTimestamps.RemoveAll(t => t < fiveSecondsAgo);
         
         // Add current timestamp
-        _spamCommandTimestamps.Add(now);
+        spamCommandTimestamps.Add(now);
         
         // Check if we have 5 executions within 5 seconds
-        if (_spamCommandTimestamps.Count >= 5)
+        if (spamCommandTimestamps.Count >= 5)
         {
             // Toggle child lock
             Configuration.ChildLockEnabled = !Configuration.ChildLockEnabled;
@@ -158,7 +155,7 @@ public sealed class Plugin : IDalamudPlugin
             Configuration.Save();
             
             // Clear timestamps
-            _spamCommandTimestamps.Clear();
+            spamCommandTimestamps.Clear();
             
             // Print chat message
             var status = Configuration.ChildLockEnabled ? "Enabled" : "Disabled";

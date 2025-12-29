@@ -1,12 +1,12 @@
 {
-  "Author": "your name here",
-  "Name": "Sample Plugin",
-  "Punchline": "A short one-liner that shows up in /xlplugins.",
-  "Description": "A description that shows up in /xlplugins. List any major slash-command(s).",
+  "Author": "frituurpan",
+  "Name": "Child Lock",
+  "Punchline": "Soft child lock to prevent accidental in-game interactions",
+  "Description": "Blocks vendor windows, duty finder interactions, and quest acceptance dialogs when enabled. Use /childlock to toggle. Features enable-on-startup and individual feature toggles.",
   "ApplicableVersion": "any",
   "Tags": [
-    "sample",
-    "plugin",
-    "goats"
+    "ui",
+    "safety",
+    "utility"
   ]
 }
