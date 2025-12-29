@@ -1,13 +1,11 @@
 ﻿using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using SamplePlugin.Windows;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SamplePlugin;
 
@@ -23,13 +21,12 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
 
-    private const string CommandName = "/pmycommand";
     private const string ChildLockCommandName = "/childlock";
     private const string ChildLockSpamCommandName = "/childlockspam";
 
     public Configuration Configuration { get; init; }
 
-    public readonly WindowSystem WindowSystem = new("SamplePlugin");
+    public readonly WindowSystem WindowSystem = new("ChildLock");
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
     private VendorWatcher VendorWatcher { get; init; }
@@ -64,11 +61,6 @@ public sealed class Plugin : IDalamudPlugin
         // Initialize quest watcher
         QuestWatcher = new QuestWatcher(AddonLifecycle, ChatGui, Configuration);
 
-        CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
-        {
-            HelpMessage = "A useful message to display in /xlhelp"
-        });
-
         CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
         {
             HelpMessage = "Toggle child lock"
@@ -89,10 +81,8 @@ public sealed class Plugin : IDalamudPlugin
         // Adds another button doing the same but for the main ui of the plugin
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUi;
 
-        // Add a simple message to the log with level set to information
-        // Use /xllog to open the log window in-game
-        // Example Output: 00:57:54.959 | INF | [SamplePlugin] ===A cool log message from Sample Plugin===
-        Log.Information($"===A cool log message from {PluginInterface.Manifest.Name}===");
+        // Add a simple message to the log
+        Log.Information("Child Lock plugin loaded successfully");
     }
 
     public void Dispose()
@@ -110,15 +100,8 @@ public sealed class Plugin : IDalamudPlugin
         DutyFinderWatcher.Dispose();
         QuestWatcher.Dispose();
 
-        CommandManager.RemoveHandler(CommandName);
         CommandManager.RemoveHandler(ChildLockCommandName);
         CommandManager.RemoveHandler(ChildLockSpamCommandName);
-    }
-
-    private void OnCommand(string command, string args)
-    {
-        // In response to the slash command, toggle the display status of our main ui
-        MainWindow.Toggle();
     }
 
     private void OnChildLockCommand(string command, string args)
@@ -167,3 +150,4 @@ public sealed class Plugin : IDalamudPlugin
     public void ToggleConfigUi() => ConfigWindow.Toggle();
     public void ToggleMainUi() => MainWindow.Toggle();
 }
+
