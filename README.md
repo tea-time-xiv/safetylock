@@ -65,3 +65,6 @@ Install via the Dalamud plugin installer in XIVLauncher.
 
 This project is licensed under the AGPL-3.0-or-later license. See [LICENSE.md](LICENSE.md) for details.
 
+## Disclaimer
+
+This plugin is 100% AI generated.
