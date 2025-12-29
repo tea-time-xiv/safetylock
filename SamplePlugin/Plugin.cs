@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Command;
+﻿﻿using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using System.IO;
@@ -17,18 +17,23 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
+    [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
+    [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
 
     private const string CommandName = "/pmycommand";
+    private const string ChildLockCommandName = "/childlock";
 
     public Configuration Configuration { get; init; }
 
     public readonly WindowSystem WindowSystem = new("SamplePlugin");
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
+    private VendorWatcher VendorWatcher { get; init; }
 
     public Plugin()
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+
 
         // You might normally want to embed resources and load them from the manifest stream
         var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
@@ -39,9 +44,17 @@ public sealed class Plugin : IDalamudPlugin
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
 
+        // Initialize vendor watcher
+        VendorWatcher = new VendorWatcher(AddonLifecycle, ChatGui, Configuration);
+
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
             HelpMessage = "A useful message to display in /xlhelp"
+        });
+
+        CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
+        {
+            HelpMessage = "Toggle child lock"
         });
 
         // Tell the UI system that we want our windows to be drawn through the window system
@@ -71,14 +84,29 @@ public sealed class Plugin : IDalamudPlugin
 
         ConfigWindow.Dispose();
         MainWindow.Dispose();
+        VendorWatcher.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
+        CommandManager.RemoveHandler(ChildLockCommandName);
     }
 
     private void OnCommand(string command, string args)
     {
         // In response to the slash command, toggle the display status of our main ui
         MainWindow.Toggle();
+    }
+
+    private void OnChildLockCommand(string command, string args)
+    {
+        // Toggle child lock
+        Configuration.ChildLockEnabled = !Configuration.ChildLockEnabled;
+        
+        // Save the config
+        Configuration.Save();
+        
+        // Print chat message
+        var status = Configuration.ChildLockEnabled ? "Enabled" : "Disabled";
+        ChatGui.Print($"Child Lock: {status}");
     }
     
     public void ToggleConfigUi() => ConfigWindow.Toggle();
