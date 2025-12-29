@@ -14,6 +14,11 @@ public class Configuration : IPluginConfiguration
     // Child Lock
     public bool ChildLockEnabled { get; set; } = false;
 
+    // Feature toggles
+    public bool BlockVendors { get; set; } = true;
+    public bool BlockDutyFinder { get; set; } = true;
+    public bool BlockQuests { get; set; } = true;
+
     // The below exists just to make saving less cumbersome
     public void Save()
     {

@@ -30,8 +30,8 @@ public sealed class VendorWatcher : IDisposable
 
     private unsafe void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Only react if child lock is enabled
-        if (!configuration.ChildLockEnabled)
+        // Only react if child lock is enabled and vendor blocking is enabled
+        if (!configuration.ChildLockEnabled || !configuration.BlockVendors)
         {
             return;
         }

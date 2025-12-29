@@ -56,21 +56,47 @@ public class ConfigWindow : Window, IDisposable
         ImGui.Separator();
         ImGui.Spacing();
         
-        // Help text
-        ImGui.TextUnformatted("What does Child Lock block?");
+        // Blocked Features section
+        ImGui.TextUnformatted("Blocked Features:");
         ImGui.Spacing();
         
-        ImGui.Indent();
-        ImGui.TextUnformatted("• Vendors");
-        ImGui.TextUnformatted("• Duty Finder");
-        ImGui.TextUnformatted("• Quest acceptance / completion");
-        ImGui.Unindent();
+        // Feature checkboxes - only editable when Child Lock is enabled
+        if (!configuration.ChildLockEnabled)
+        {
+            ImGui.BeginDisabled();
+        }
+        
+        var blockVendors = configuration.BlockVendors;
+        if (ImGui.Checkbox("Block Vendors", ref blockVendors))
+        {
+            configuration.BlockVendors = blockVendors;
+            configuration.Save();
+        }
+        
+        var blockDutyFinder = configuration.BlockDutyFinder;
+        if (ImGui.Checkbox("Block Duty Finder", ref blockDutyFinder))
+        {
+            configuration.BlockDutyFinder = blockDutyFinder;
+            configuration.Save();
+        }
+        
+        var blockQuests = configuration.BlockQuests;
+        if (ImGui.Checkbox("Block Quests", ref blockQuests))
+        {
+            configuration.BlockQuests = blockQuests;
+            configuration.Save();
+        }
+        
+        if (!configuration.ChildLockEnabled)
+        {
+            ImGui.EndDisabled();
+        }
         
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
         
-        ImGui.TextUnformatted("Alternative control:");
+        // Alternative control
         ImGui.Spacing();
         ImGui.Indent();
         ImGui.TextUnformatted("/childlockspam can also toggle the lock");

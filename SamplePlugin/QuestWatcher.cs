@@ -28,8 +28,8 @@ public sealed class QuestWatcher : IDisposable
 
     private unsafe void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Only react if child lock is enabled
-        if (!configuration.ChildLockEnabled)
+        // Only react if child lock is enabled and quest blocking is enabled
+        if (!configuration.ChildLockEnabled || !configuration.BlockQuests)
         {
             return;
         }
