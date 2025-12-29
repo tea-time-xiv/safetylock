@@ -24,6 +24,8 @@ public sealed class VendorWatcher : IDisposable
         // Subscribe to addon lifecycle events
         this.addonLifecycle.RegisterListener(AddonEvent.PostSetup, "Shop", OnAddonPostSetup);
         this.addonLifecycle.RegisterListener(AddonEvent.PostSetup, "ShopExchangeItem", OnAddonPostSetup);
+        this.addonLifecycle.RegisterListener(AddonEvent.PostSetup, "ShopExchangeCurrency", OnAddonPostSetup);
+        this.addonLifecycle.RegisterListener(AddonEvent.PostSetup, "GoldSaucerExchange", OnAddonPostSetup);
     }
 
     private unsafe void OnAddonPostSetup(AddonEvent type, AddonArgs args)
@@ -51,6 +53,8 @@ public sealed class VendorWatcher : IDisposable
         // Unsubscribe from events to prevent memory leaks
         addonLifecycle.UnregisterListener(AddonEvent.PostSetup, "Shop", OnAddonPostSetup);
         addonLifecycle.UnregisterListener(AddonEvent.PostSetup, "ShopExchangeItem", OnAddonPostSetup);
+        addonLifecycle.UnregisterListener(AddonEvent.PostSetup, "ShopExchangeCurrency", OnAddonPostSetup);
+        addonLifecycle.UnregisterListener(AddonEvent.PostSetup, "GoldSaucerExchange", OnAddonPostSetup);
     }
 }
 
