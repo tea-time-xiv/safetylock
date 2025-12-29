@@ -1,10 +1,13 @@
-﻿﻿using Dalamud.Game.Command;
+﻿using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using System.IO;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using SamplePlugin.Windows;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SamplePlugin;
 
@@ -22,6 +25,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private const string CommandName = "/pmycommand";
     private const string ChildLockCommandName = "/childlock";
+    private const string ChildLockSpamCommandName = "/childlockspam";
 
     public Configuration Configuration { get; init; }
 
@@ -31,6 +35,9 @@ public sealed class Plugin : IDalamudPlugin
     private VendorWatcher VendorWatcher { get; init; }
     private DutyFinderWatcher DutyFinderWatcher { get; init; }
     private QuestWatcher QuestWatcher { get; init; }
+
+    // Track spam command executions
+    private readonly List<DateTime> _spamCommandTimestamps = new();
 
     public Plugin()
     {
@@ -63,6 +70,11 @@ public sealed class Plugin : IDalamudPlugin
         CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
         {
             HelpMessage = "Toggle child lock"
+        });
+
+        CommandManager.AddHandler(ChildLockSpamCommandName, new CommandInfo(OnChildLockSpamCommand)
+        {
+            HelpMessage = "Toggle child lock (requires 5 executions within 5 seconds)"
         });
 
         // Tell the UI system that we want our windows to be drawn through the window system
@@ -98,6 +110,7 @@ public sealed class Plugin : IDalamudPlugin
 
         CommandManager.RemoveHandler(CommandName);
         CommandManager.RemoveHandler(ChildLockCommandName);
+        CommandManager.RemoveHandler(ChildLockSpamCommandName);
     }
 
     private void OnCommand(string command, string args)
@@ -117,6 +130,36 @@ public sealed class Plugin : IDalamudPlugin
         // Print chat message
         var status = Configuration.ChildLockEnabled ? "Enabled" : "Disabled";
         ChatGui.Print($"Child Lock: {status}");
+    }
+
+    private void OnChildLockSpamCommand(string command, string args)
+    {
+        var now = DateTime.UtcNow;
+        var fiveSecondsAgo = now.AddSeconds(-5);
+        
+        // Remove timestamps older than 5 seconds
+        _spamCommandTimestamps.RemoveAll(t => t < fiveSecondsAgo);
+        
+        // Add current timestamp
+        _spamCommandTimestamps.Add(now);
+        
+        // Check if we have 5 executions within 5 seconds
+        if (_spamCommandTimestamps.Count >= 5)
+        {
+            // Toggle child lock
+            Configuration.ChildLockEnabled = !Configuration.ChildLockEnabled;
+            
+            // Save the config
+            Configuration.Save();
+            
+            // Clear timestamps
+            _spamCommandTimestamps.Clear();
+            
+            // Print chat message
+            var status = Configuration.ChildLockEnabled ? "Enabled" : "Disabled";
+            ChatGui.Print($"Child Lock: {status}");
+        }
+        // If fewer than 5, do nothing (no chat message)
     }
     
     public void ToggleConfigUi() => ConfigWindow.Toggle();
