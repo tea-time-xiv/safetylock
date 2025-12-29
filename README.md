@@ -1,10 +1,10 @@
-# Child Lock
+# Child Safety Lock
 
-A Dalamud plugin that provides a soft "child lock" feature for Final Fantasy XIV. When enabled, it blocks certain in-game interactions to prevent accidental actions.
+A Dalamud plugin that provides a soft "Child Safety Lock" feature for Final Fantasy XIV. When enabled, it blocks certain in-game interactions to prevent accidental actions.
 
 ## Features
 
-When Child Lock is enabled, the following interactions are blocked:
+When Child Safety Lock is enabled, the following interactions are blocked:
 
 - **Vendor Windows** - Prevents opening vendor/shop interfaces
 - **Duty Finder** - Prevents interacting with duty finder UI
@@ -16,7 +16,7 @@ Each feature can be individually toggled on or off in the configuration.
 
 ### Commands
 
-- `/childlock` - Toggle child lock on/off
+- `/childlock` - Toggle Child Safety Lock on/off
 - `/childlockspam` - Requires 5 executions within 5 seconds to toggle (prevents accidental toggles)
 - `/pmycommand` - Opens the main plugin window
 
@@ -27,8 +27,8 @@ Open the configuration window via:
 - In-game `/xlplugins` menu
 
 Configuration options:
-- **Enable Child Lock** - Master on/off toggle
-- **Enable on Startup** - Automatically enable child lock when the plugin loads
+- **Enable Child Safety Lock** - Master on/off toggle
+- **Enable on Startup** - Automatically enable Child Safety Lock when the plugin loads
 - **Block Vendors** - Enable/disable vendor blocking
 - **Block Duty Finder** - Enable/disable duty finder blocking
 - **Block Quests** - Enable/disable quest acceptance blocking
@@ -59,7 +59,7 @@ Install via the Dalamud plugin installer in XIVLauncher.
 1. Launch the game and use `/xlsettings` in chat to open up the Dalamud settings.
 2. Go to `Experimental`, and add the full path to the `SamplePlugin.dll` to the list of Dev Plugin Locations.
 3. Use `/xlplugins` to open the Plugin Installer, go to `Dev Tools > Installed Dev Plugins`, and enable the plugin.
-4. You should now be able to use `/childlock` to toggle the child lock!
+4. You should now be able to use `/childlock` to toggle the Child Safety Lock!
 
 ## License
 

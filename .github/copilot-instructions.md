@@ -1,8 +1,8 @@
-﻿# Child Lock - Development Instructions
+﻿# Child Safety Lock - Development Instructions
 
 ## Project Goal
 
-Child Lock is a Dalamud plugin that provides a soft "child lock" feature for Final Fantasy XIV. When enabled, it blocks certain in-game interactions to prevent accidental actions:
+Child Safety Lock is a Dalamud plugin that provides a soft "Child Safety Lock" feature for Final Fantasy XIV. When enabled, it blocks certain in-game interactions to prevent accidental actions:
 
 - Vendor windows
 - Duty Finder interactions

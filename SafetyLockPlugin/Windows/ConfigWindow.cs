@@ -3,13 +3,13 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 
-namespace SamplePlugin.Windows;
+namespace SafetyLockPlugin.Windows;
 
 public class ConfigWindow : Window, IDisposable
 {
     private readonly Configuration configuration;
 
-    public ConfigWindow(Plugin plugin) : base("Child Lock Configuration###ChildLockConfigWindow")
+    public ConfigWindow(Plugin plugin) : base("Child Safety Lock Configuration###ChildLockConfigWindow")
     {
         Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse;
 
@@ -30,13 +30,13 @@ public class ConfigWindow : Window, IDisposable
         if (configuration.ChildLockEnabled)
         {
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.0f, 1.0f, 0.0f, 1.0f)); // Green
-            ImGui.TextUnformatted("Child Lock is ENABLED");
+            ImGui.TextUnformatted("Child Safety Lock is ENABLED");
             ImGui.PopStyleColor();
         }
         else
         {
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // Red
-            ImGui.TextUnformatted("Child Lock is DISABLED");
+            ImGui.TextUnformatted("Child Safety Lock is DISABLED");
             ImGui.PopStyleColor();
         }
         
@@ -46,7 +46,7 @@ public class ConfigWindow : Window, IDisposable
         
         // Control checkbox
         var childLockEnabled = configuration.ChildLockEnabled;
-        if (ImGui.Checkbox("Enable Child Lock", ref childLockEnabled))
+        if (ImGui.Checkbox("Enable Child Safety Lock", ref childLockEnabled))
         {
             configuration.ChildLockEnabled = childLockEnabled;
             configuration.Save();
@@ -58,13 +58,13 @@ public class ConfigWindow : Window, IDisposable
         
         // Enable on startup checkbox
         var enableOnStartup = configuration.EnableOnStartup;
-        if (ImGui.Checkbox("Enable Child Lock on startup", ref enableOnStartup))
+        if (ImGui.Checkbox("Enable Child Safety Lock on startup", ref enableOnStartup))
         {
             configuration.EnableOnStartup = enableOnStartup;
             configuration.Save();
         }
         
-        ImGui.TextWrapped("Automatically enables Child Lock when the plugin loads.");
+        ImGui.TextWrapped("Automatically enables Child Safety Lock when the plugin loads.");
         
         ImGui.Spacing();
         ImGui.Separator();
@@ -74,7 +74,7 @@ public class ConfigWindow : Window, IDisposable
         ImGui.TextUnformatted("Blocked Features:");
         ImGui.Spacing();
         
-        // Feature checkboxes - only editable when Child Lock is enabled
+        // Feature checkboxes - only editable when Child Safety Lock is enabled
         if (!configuration.ChildLockEnabled)
         {
             ImGui.BeginDisabled();

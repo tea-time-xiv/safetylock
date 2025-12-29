@@ -1,7 +1,7 @@
 {
   "Author": "frituurpan",
-  "Name": "Child Lock",
-  "Punchline": "Soft child lock to prevent accidental in-game interactions",
+  "Name": "Child Safety Lock",
+  "Punchline": "Soft Child Safety Lock to prevent accidental in-game interactions",
   "Description": "Blocks vendor windows, duty finder interactions, and quest acceptance dialogs when enabled. Use /childlock to toggle. Features enable-on-startup and individual feature toggles.",
   "ApplicableVersion": "any",
   "Tags": [

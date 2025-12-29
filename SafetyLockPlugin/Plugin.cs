@@ -3,11 +3,11 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
-using SamplePlugin.Windows;
+using SafetyLockPlugin.Windows;
 using System;
 using System.Collections.Generic;
 
-namespace SamplePlugin;
+namespace SafetyLockPlugin;
 
 public sealed class Plugin : IDalamudPlugin
 {
@@ -59,12 +59,12 @@ public sealed class Plugin : IDalamudPlugin
 
         CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
         {
-            HelpMessage = "Toggle child lock"
+            HelpMessage = "Toggle Child Safety Lock"
         });
 
         CommandManager.AddHandler(ChildLockSpamCommandName, new CommandInfo(OnChildLockSpamCommand)
         {
-            HelpMessage = "Toggle child lock (requires 5 executions within 5 seconds)"
+            HelpMessage = "Toggle Child Safety Lock (requires 5 executions within 5 seconds)"
         });
 
         // Tell the UI system that we want our windows to be drawn through the window system
@@ -78,7 +78,7 @@ public sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUi;
 
         // Add a simple message to the log
-        Log.Information("Child Lock plugin loaded successfully");
+        Log.Information("Child Safety Lock plugin loaded successfully");
     }
 
     public void Dispose()
@@ -102,7 +102,7 @@ public sealed class Plugin : IDalamudPlugin
 
     private void OnChildLockCommand(string command, string args)
     {
-        // Toggle child lock
+        // Toggle Child Safety Lock
         Configuration.ChildLockEnabled = !Configuration.ChildLockEnabled;
         
         // Save the config
@@ -110,7 +110,7 @@ public sealed class Plugin : IDalamudPlugin
         
         // Print chat message
         var status = Configuration.ChildLockEnabled ? "Enabled" : "Disabled";
-        ChatGui.Print($"Child Lock: {status}");
+        ChatGui.Print($"Child Safety Lock: {status}");
     }
 
     private void OnChildLockSpamCommand(string command, string args)
@@ -127,7 +127,7 @@ public sealed class Plugin : IDalamudPlugin
         // Check if we have 5 executions within 5 seconds
         if (spamCommandTimestamps.Count >= 5)
         {
-            // Toggle child lock
+            // Toggle Child Safety Lock
             Configuration.ChildLockEnabled = !Configuration.ChildLockEnabled;
             
             // Save the config
@@ -138,7 +138,7 @@ public sealed class Plugin : IDalamudPlugin
             
             // Print chat message
             var status = Configuration.ChildLockEnabled ? "Enabled" : "Disabled";
-            ChatGui.Print($"Child Lock: {status}");
+            ChatGui.Print($"Child Safety Lock: {status}");
         }
         // If fewer than 5, do nothing (no chat message)
     }

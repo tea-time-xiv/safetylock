@@ -4,10 +4,10 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace SamplePlugin;
+namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for vendor UI addons and reports when they appear while child lock is enabled.
+/// Watches for vendor UI addons and reports when they appear while Child Safety Lock is enabled.
 /// </summary>
 public sealed class VendorWatcher : IDisposable
 {
@@ -30,7 +30,7 @@ public sealed class VendorWatcher : IDisposable
 
     private unsafe void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Only react if child lock is enabled and vendor blocking is enabled
+        // Only react if Child Safety Lock is enabled and vendor blocking is enabled
         if (!configuration.ChildLockEnabled || !configuration.BlockVendors)
         {
             return;
@@ -45,7 +45,7 @@ public sealed class VendorWatcher : IDisposable
         }
 
         addon->Close(true);
-        chatGui.Print("Vendor interaction blocked (Child Lock enabled)");
+        chatGui.Print("Vendor interaction blocked (Child Safety Lock enabled)");
     }
 
     public void Dispose()

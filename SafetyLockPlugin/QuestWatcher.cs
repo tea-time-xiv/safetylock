@@ -4,10 +4,10 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace SamplePlugin;
+namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for quest acceptance and completion UI addons and blocks them when child lock is enabled.
+/// Watches for quest acceptance and completion UI addons and blocks them when Child Safety Lock is enabled.
 /// </summary>
 public sealed class QuestWatcher : IDisposable
 {
@@ -28,7 +28,7 @@ public sealed class QuestWatcher : IDisposable
 
     private unsafe void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Only react if child lock is enabled and quest blocking is enabled
+        // Only react if Child Safety Lock is enabled and quest blocking is enabled
         if (!configuration.ChildLockEnabled || !configuration.BlockQuests)
         {
             return;
@@ -43,7 +43,7 @@ public sealed class QuestWatcher : IDisposable
         }
 
         addon->Close(true);
-        chatGui.Print("Quest interaction blocked (Child Lock enabled)");
+        chatGui.Print("Quest interaction blocked (Child Safety Lock enabled)");
     }
 
     public void Dispose()

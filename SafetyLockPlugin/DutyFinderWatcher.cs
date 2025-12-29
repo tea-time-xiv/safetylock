@@ -4,10 +4,10 @@ using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace SamplePlugin;
+namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for Duty Finder UI addons and blocks them when child lock is enabled.
+/// Watches for Duty Finder UI addons and blocks them when Child Safety Lock is enabled.
 /// </summary>
 public sealed class DutyFinderWatcher : IDisposable
 {
@@ -28,7 +28,7 @@ public sealed class DutyFinderWatcher : IDisposable
 
     private unsafe void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Only react if child lock is enabled and duty finder blocking is enabled
+        // Only react if Child Safety Lock is enabled and duty finder blocking is enabled
         if (!configuration.ChildLockEnabled || !configuration.BlockDutyFinder)
         {
             return;
@@ -43,7 +43,7 @@ public sealed class DutyFinderWatcher : IDisposable
         }
 
         addon->Close(true);
-        chatGui.Print("Duty Finder blocked (Child Lock enabled)");
+        chatGui.Print("Duty Finder blocked (Child Safety Lock enabled)");
     }
 
     public void Dispose()

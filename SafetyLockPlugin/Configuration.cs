@@ -1,7 +1,7 @@
 ﻿﻿using Dalamud.Configuration;
 using System;
 
-namespace SamplePlugin;
+namespace SafetyLockPlugin;
 
 [Serializable]
 public class Configuration : IPluginConfiguration
@@ -11,7 +11,7 @@ public class Configuration : IPluginConfiguration
     public bool IsConfigWindowMovable { get; set; } = true;
     public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
 
-    // Child Lock
+    // Child Safety Lock
     public bool ChildLockEnabled { get; set; } = false;
     public bool EnableOnStartup { get; set; } = false;
 

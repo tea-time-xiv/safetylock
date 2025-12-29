@@ -3,14 +3,14 @@ using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
 
-namespace SamplePlugin.Windows;
+namespace SafetyLockPlugin.Windows;
 
 public class MainWindow : Window, IDisposable
 {
     private readonly Plugin plugin;
 
     public MainWindow(Plugin plugin)
-        : base("Child Lock##ChildLockMainWindow", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+        : base("Child Safety Lock##ChildLockMainWindow", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {
         SizeConstraints = new WindowSizeConstraints
         {
@@ -25,7 +25,7 @@ public class MainWindow : Window, IDisposable
 
     public override void Draw()
     {
-        ImGui.TextUnformatted("Child Lock Plugin");
+        ImGui.TextUnformatted("Child Safety Lock Plugin");
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
@@ -50,7 +50,7 @@ public class MainWindow : Window, IDisposable
         ImGui.Spacing();
 
         // Quick toggle
-        if (ImGui.Button("Toggle Child Lock"))
+        if (ImGui.Button("Toggle Child Safety Lock"))
         {
             plugin.Configuration.ChildLockEnabled = !plugin.Configuration.ChildLockEnabled;
             plugin.Configuration.Save();
@@ -69,7 +69,7 @@ public class MainWindow : Window, IDisposable
         ImGui.Spacing();
 
         // Info
-        ImGui.TextWrapped("Use /childlock to quickly toggle the child lock on/off.");
+        ImGui.TextWrapped("Use /childlock to quickly toggle the Child Safety Lock on/off.");
     }
 }
 
