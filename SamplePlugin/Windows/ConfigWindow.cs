@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
@@ -9,15 +9,11 @@ public class ConfigWindow : Window, IDisposable
 {
     private readonly Configuration configuration;
 
-    // We give this window a constant ID using ###.
-    // This allows for labels to be dynamic, like "{FPS Counter}fps###XYZ counter window",
-    // and the window ID will always be "###XYZ counter window" for ImGui
-    public ConfigWindow(Plugin plugin) : base("A Wonderful Configuration Window###With a constant ID")
+    public ConfigWindow(Plugin plugin) : base("Child Lock Configuration###ChildLockConfigWindow")
     {
-        Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
-                ImGuiWindowFlags.NoScrollWithMouse;
+        Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse;
 
-        Size = new Vector2(232, 90);
+        Size = new Vector2(500, 300);
         SizeCondition = ImGuiCond.Always;
 
         configuration = plugin.Configuration;
@@ -25,35 +21,60 @@ public class ConfigWindow : Window, IDisposable
 
     public void Dispose() { }
 
-    public override void PreDraw()
+    public override void Draw()
     {
-        // Flags must be added or removed before Draw() is being called, or they won't apply
-        if (configuration.IsConfigWindowMovable)
+        // Status display
+        ImGui.TextUnformatted("Current Status:");
+        ImGui.Spacing();
+        
+        if (configuration.ChildLockEnabled)
         {
-            Flags &= ~ImGuiWindowFlags.NoMove;
+            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.0f, 1.0f, 0.0f, 1.0f)); // Green
+            ImGui.TextUnformatted("Child Lock is ENABLED");
+            ImGui.PopStyleColor();
         }
         else
         {
-            Flags |= ImGuiWindowFlags.NoMove;
+            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1.0f, 0.0f, 0.0f, 1.0f)); // Red
+            ImGui.TextUnformatted("Child Lock is DISABLED");
+            ImGui.PopStyleColor();
         }
-    }
-
-    public override void Draw()
-    {
-        // Can't ref a property, so use a local copy
-        var configValue = configuration.SomePropertyToBeSavedAndWithADefault;
-        if (ImGui.Checkbox("Random Config Bool", ref configValue))
+        
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+        
+        // Control checkbox
+        var childLockEnabled = configuration.ChildLockEnabled;
+        if (ImGui.Checkbox("Enable Child Lock", ref childLockEnabled))
         {
-            configuration.SomePropertyToBeSavedAndWithADefault = configValue;
-            // Can save immediately on change if you don't want to provide a "Save and Close" button
+            configuration.ChildLockEnabled = childLockEnabled;
             configuration.Save();
         }
-
-        var movable = configuration.IsConfigWindowMovable;
-        if (ImGui.Checkbox("Movable Config Window", ref movable))
-        {
-            configuration.IsConfigWindowMovable = movable;
-            configuration.Save();
-        }
+        
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+        
+        // Help text
+        ImGui.TextUnformatted("What does Child Lock block?");
+        ImGui.Spacing();
+        
+        ImGui.Indent();
+        ImGui.TextUnformatted("• Vendors");
+        ImGui.TextUnformatted("• Duty Finder");
+        ImGui.TextUnformatted("• Quest acceptance / completion");
+        ImGui.Unindent();
+        
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+        
+        ImGui.TextUnformatted("Alternative control:");
+        ImGui.Spacing();
+        ImGui.Indent();
+        ImGui.TextUnformatted("/childlockspam can also toggle the lock");
+        ImGui.TextUnformatted("(requires 5 executions within 5 seconds)");
+        ImGui.Unindent();
     }
 }
