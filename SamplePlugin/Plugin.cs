@@ -43,11 +43,10 @@ public sealed class Plugin : IDalamudPlugin
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
-        // Apply EnableOnStartup setting
+        // Apply EnableOnStartup setting (runtime-only; do not persist here)
         if (Configuration.EnableOnStartup)
         {
             Configuration.ChildLockEnabled = true;
-            Configuration.Save();
         }
 
         // You might normally want to embed resources and load them from the manifest stream
