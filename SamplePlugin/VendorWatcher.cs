@@ -2,6 +2,7 @@
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace SamplePlugin;
 
@@ -25,7 +26,7 @@ public sealed class VendorWatcher : IDisposable
         this.addonLifecycle.RegisterListener(AddonEvent.PostSetup, "ShopExchangeItem", OnAddonPostSetup);
     }
 
-    private void OnAddonPostSetup(AddonEvent type, AddonArgs args)
+    private unsafe void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
         // Only react if child lock is enabled
         if (!configuration.ChildLockEnabled)
@@ -33,8 +34,16 @@ public sealed class VendorWatcher : IDisposable
             return;
         }
 
-        // Report vendor interaction
-        chatGui.Print("Vendor interaction detected (Child Lock enabled)");
+        // Close the vendor addon to block interaction
+        var addonPtr = args.Addon;
+        var addon = (AtkUnitBase*)(nint)addonPtr;
+        if (addon == null)
+        {
+            return;
+        }
+
+        addon->Close(true);
+        chatGui.Print("Vendor interaction blocked (Child Lock enabled)");
     }
 
     public void Dispose()
