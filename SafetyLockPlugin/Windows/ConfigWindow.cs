@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿﻿﻿using System;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
@@ -98,6 +98,13 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.Checkbox("Block Quests", ref blockQuests))
         {
             configuration.BlockQuests = blockQuests;
+            configuration.Save();
+        }
+        
+        var blockGlamourDresser = configuration.BlockGlamourDresser;
+        if (ImGui.Checkbox("Block Glamour Dresser", ref blockGlamourDresser))
+        {
+            configuration.BlockGlamourDresser = blockGlamourDresser;
             configuration.Save();
         }
         
