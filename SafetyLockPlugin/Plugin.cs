@@ -16,6 +16,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
+    [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
 
     private const string ChildLockCommandName = "/childlock";
     private const string ChildLockSpamCommandName = "/childlockspam";
@@ -50,16 +51,16 @@ public sealed class Plugin : IDalamudPlugin
         WindowSystem.AddWindow(MainWindow);
 
         // Initialize vendor watcher
-        VendorWatcher = new VendorWatcher(AddonLifecycle, ChatGui, Configuration);
+        VendorWatcher = new VendorWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
         // Initialize duty finder watcher
-        DutyFinderWatcher = new DutyFinderWatcher(AddonLifecycle, ChatGui, Configuration);
+        DutyFinderWatcher = new DutyFinderWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
         // Initialize quest watcher
-        QuestWatcher = new QuestWatcher(AddonLifecycle, ChatGui, Configuration);
+        QuestWatcher = new QuestWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
         // Initialize glamour dresser watcher
-        GlamourDresserWatcher = new GlamourDresserWatcher(AddonLifecycle, ChatGui, Configuration);
+        GlamourDresserWatcher = new GlamourDresserWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
         CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
         {

@@ -1,8 +1,8 @@
-﻿using System;
+﻿﻿using System;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
+using Dalamud.Game.NativeWrapper;
 using Dalamud.Plugin.Services;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace SafetyLockPlugin;
 
@@ -12,12 +12,14 @@ namespace SafetyLockPlugin;
 public sealed class VendorWatcher : IDisposable
 {
     private readonly IAddonLifecycle addonLifecycle;
+    private readonly IGameGui gameGui;
     private readonly IChatGui chatGui;
     private readonly Configuration configuration;
 
-    public VendorWatcher(IAddonLifecycle addonLifecycle, IChatGui chatGui, Configuration configuration)
+    public VendorWatcher(IAddonLifecycle addonLifecycle, IGameGui gameGui, IChatGui chatGui, Configuration configuration)
     {
         this.addonLifecycle = addonLifecycle;
+        this.gameGui = gameGui;
         this.chatGui = chatGui;
         this.configuration = configuration;
 
@@ -28,7 +30,7 @@ public sealed class VendorWatcher : IDisposable
         this.addonLifecycle.RegisterListener(AddonEvent.PostSetup, "GoldSaucerExchange", OnAddonPostSetup);
     }
 
-    private unsafe void OnAddonPostSetup(AddonEvent type, AddonArgs args)
+    private void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
         // Only react if Child Safety Lock is enabled and vendor blocking is enabled
         if (!configuration.ChildLockEnabled || !configuration.BlockVendors)
@@ -37,14 +39,16 @@ public sealed class VendorWatcher : IDisposable
         }
 
         // Close the vendor addon to block interaction
-        var addonPtr = args.Addon;
-        var addon = (AtkUnitBase*)(nint)addonPtr;
-        if (addon == null)
+        var addon = gameGui.GetAddonByName(args.AddonName);
+        if (addon.Address == nint.Zero)
         {
             return;
         }
 
-        addon->Close(true);
+        unsafe
+        {
+            ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
+        }
         chatGui.Print("Vendor interaction blocked (Child Safety Lock enabled)");
     }
 
