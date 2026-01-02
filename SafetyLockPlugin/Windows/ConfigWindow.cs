@@ -108,6 +108,13 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
         
+        var blockArmoire = configuration.BlockArmoire;
+        if (ImGui.Checkbox("Block Armoire", ref blockArmoire))
+        {
+            configuration.BlockArmoire = blockArmoire;
+            configuration.Save();
+        }
+        
         if (!configuration.ChildLockEnabled)
         {
             ImGui.EndDisabled();

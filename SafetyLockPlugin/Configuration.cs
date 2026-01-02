@@ -20,6 +20,7 @@ public class Configuration : IPluginConfiguration
     public bool BlockDutyFinder { get; set; } = true;
     public bool BlockQuests { get; set; } = true;
     public bool BlockGlamourDresser { get; set; } = true;
+    public bool BlockArmoire { get; set; } = true;
 
     // The below exists just to make saving less cumbersome
     public void Save()
