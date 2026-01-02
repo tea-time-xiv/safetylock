@@ -135,14 +135,5 @@ public class ConfigWindow : Window, IDisposable
         }
         
         ImGui.Spacing();
-        ImGui.Separator();
-        ImGui.Spacing();
-        
-        // Alternative control
-        ImGui.Spacing();
-        ImGui.Indent();
-        ImGui.TextUnformatted("/childlockspam can also toggle the lock");
-        ImGui.TextUnformatted("(requires 5 executions within 5 seconds)");
-        ImGui.Unindent();
     }
 }
