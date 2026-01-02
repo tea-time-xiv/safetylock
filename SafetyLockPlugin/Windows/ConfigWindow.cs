@@ -115,6 +115,13 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
         
+        var blockFreeCompanyChest = configuration.BlockFreeCompanyChest;
+        if (ImGui.Checkbox("Block Free Company Chest", ref blockFreeCompanyChest))
+        {
+            configuration.BlockFreeCompanyChest = blockFreeCompanyChest;
+            configuration.Save();
+        }
+        
         if (!configuration.ChildLockEnabled)
         {
             ImGui.EndDisabled();

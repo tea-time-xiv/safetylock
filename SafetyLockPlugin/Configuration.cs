@@ -21,6 +21,7 @@ public class Configuration : IPluginConfiguration
     public bool BlockQuests { get; set; } = true;
     public bool BlockGlamourDresser { get; set; } = true;
     public bool BlockArmoire { get; set; } = true;
+    public bool BlockFreeCompanyChest { get; set; } = true;
 
     // The below exists just to make saving less cumbersome
     public void Save()
