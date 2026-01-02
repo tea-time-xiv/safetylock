@@ -129,6 +129,13 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
         
+        var blockLevequests = configuration.BlockLevequests;
+        if (ImGui.Checkbox("Block Levequests", ref blockLevequests))
+        {
+            configuration.BlockLevequests = blockLevequests;
+            configuration.Save();
+        }
+        
         if (!configuration.ChildLockEnabled)
         {
             ImGui.EndDisabled();
