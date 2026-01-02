@@ -15,9 +15,8 @@ public sealed class LevequestWatcher : IDisposable
     private readonly IChatGui chatGui;
     private readonly Configuration configuration;
     
-    // Debounce flags to prevent repeated blocking and chat spam
-    private bool hasBlockedGuildLeve;
-    private bool hasBlockedLeveQuestDetail;
+    // Debounce flag to prevent repeated blocking and chat spam
+    private bool hasBlockedLeve;
 
     public LevequestWatcher(IAddonLifecycle addonLifecycle, IGameGui gameGui, IChatGui chatGui, Configuration configuration)
     {
@@ -33,31 +32,32 @@ public sealed class LevequestWatcher : IDisposable
 
     private void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Reset debounce flags if Child Safety Lock is disabled
+        // Reset debounce flag if Child Safety Lock is disabled
         if (!configuration.ChildLockEnabled || !configuration.BlockLevequests)
         {
-            ResetDebounceFlags();
+            hasBlockedLeve = false;
             return;
         }
 
-        // Get the addon pointer
+        // Check if both addons are closed - if so, reset debounce flag
+        var guildLeveAddon = gameGui.GetAddonByName("GuildLeve");
+        var leveQuestDetailAddon = gameGui.GetAddonByName("LeveQuestDetail");
+        
+        if (guildLeveAddon.Address == nint.Zero && leveQuestDetailAddon.Address == nint.Zero)
+        {
+            hasBlockedLeve = false;
+            return;
+        }
+
+        // If already blocked, don't block again
+        if (hasBlockedLeve)
+        {
+            return;
+        }
+
+        // Get the current addon pointer
         var addon = gameGui.GetAddonByName(args.AddonName);
         if (addon.Address == nint.Zero)
-        {
-            // Addon no longer present - reset debounce flags
-            ResetDebounceFlags();
-            return;
-        }
-
-        // Check debounce flag for this specific addon
-        bool hasAlreadyBlocked = args.AddonName switch
-        {
-            "GuildLeve" => hasBlockedGuildLeve,
-            "LeveQuestDetail" => hasBlockedLeveQuestDetail,
-            _ => false
-        };
-
-        if (hasAlreadyBlocked)
         {
             return;
         }
@@ -68,25 +68,12 @@ public sealed class LevequestWatcher : IDisposable
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
         
-        // Set debounce flag for this addon
-        switch (args.AddonName)
-        {
-            case "GuildLeve":
-                hasBlockedGuildLeve = true;
-                break;
-            case "LeveQuestDetail":
-                hasBlockedLeveQuestDetail = true;
-                break;
-        }
+        // Set debounce flag
+        hasBlockedLeve = true;
         
         chatGui.Print("Levequest acceptance blocked (Child Safety Lock enabled)");
     }
 
-    private void ResetDebounceFlags()
-    {
-        hasBlockedGuildLeve = false;
-        hasBlockedLeveQuestDetail = false;
-    }
 
     public void Dispose()
     {
