@@ -32,6 +32,7 @@ public sealed class Plugin : IDalamudPlugin
     private GlamourDresserWatcher GlamourDresserWatcher { get; init; }
     private ArmoireWatcher ArmoireWatcher { get; init; }
     private FreeCompanyChestWatcher FreeCompanyChestWatcher { get; init; }
+    private HousingFoodWatcher HousingFoodWatcher { get; init; }
 
     // Track spam command executions
     private readonly List<DateTime> spamCommandTimestamps = new();
@@ -69,6 +70,9 @@ public sealed class Plugin : IDalamudPlugin
 
         // Initialize free company chest watcher
         FreeCompanyChestWatcher = new FreeCompanyChestWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
+
+        // Initialize housing food watcher
+        HousingFoodWatcher = new HousingFoodWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
         CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
         {
@@ -111,6 +115,7 @@ public sealed class Plugin : IDalamudPlugin
         GlamourDresserWatcher.Dispose();
         ArmoireWatcher.Dispose();
         FreeCompanyChestWatcher.Dispose();
+        HousingFoodWatcher.Dispose();
 
         CommandManager.RemoveHandler(ChildLockCommandName);
         CommandManager.RemoveHandler(ChildLockSpamCommandName);

@@ -122,6 +122,13 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
         
+        var blockHousingFood = configuration.BlockHousingFood;
+        if (ImGui.Checkbox("Block Housing Food", ref blockHousingFood))
+        {
+            configuration.BlockHousingFood = blockHousingFood;
+            configuration.Save();
+        }
+        
         if (!configuration.ChildLockEnabled)
         {
             ImGui.EndDisabled();
