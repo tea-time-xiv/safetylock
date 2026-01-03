@@ -17,6 +17,8 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
     [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
+    [PluginService] internal static IClientState ClientState { get; private set; } = null!;
+    [PluginService] internal static ITargetManager TargetManager { get; private set; } = null!;
 
     private const string ChildLockCommandName = "/childlock";
     private const string ChildLockSpamCommandName = "/childlockspam";
@@ -80,7 +82,7 @@ public sealed class Plugin : IDalamudPlugin
         LevequestWatcher = new LevequestWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
         // Initialize housing retainer watcher
-        HousingRetainerWatcher = new HousingRetainerWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
+        HousingRetainerWatcher = new HousingRetainerWatcher(AddonLifecycle, GameGui, ChatGui, TargetManager, Configuration);
 
         CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
         {
