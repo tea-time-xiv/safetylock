@@ -34,6 +34,7 @@ public sealed class Plugin : IDalamudPlugin
     private FreeCompanyChestWatcher FreeCompanyChestWatcher { get; init; }
     private HousingFoodWatcher HousingFoodWatcher { get; init; }
     private LevequestWatcher LevequestWatcher { get; init; }
+    private HousingRetainerWatcher HousingRetainerWatcher { get; init; }
 
     // Track spam command executions
     private readonly List<DateTime> spamCommandTimestamps = new();
@@ -78,6 +79,9 @@ public sealed class Plugin : IDalamudPlugin
         // Initialize levequest watcher
         LevequestWatcher = new LevequestWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
+        // Initialize housing retainer watcher
+        HousingRetainerWatcher = new HousingRetainerWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
+
         CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
         {
             HelpMessage = "Toggle Child Safety Lock"
@@ -121,6 +125,7 @@ public sealed class Plugin : IDalamudPlugin
         FreeCompanyChestWatcher.Dispose();
         HousingFoodWatcher.Dispose();
         LevequestWatcher.Dispose();
+        HousingRetainerWatcher.Dispose();
 
         CommandManager.RemoveHandler(ChildLockCommandName);
         CommandManager.RemoveHandler(ChildLockSpamCommandName);

@@ -24,6 +24,7 @@ public class Configuration : IPluginConfiguration
     public bool BlockFreeCompanyChest { get; set; } = true;
     public bool BlockHousingFood { get; set; } = true;
     public bool BlockLevequests { get; set; } = true;
+    public bool BlockHousingRetainers { get; set; } = true;
 
     // The below exists just to make saving less cumbersome
     public void Save()

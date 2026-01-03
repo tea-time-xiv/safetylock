@@ -136,6 +136,13 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
         
+        var blockHousingRetainers = configuration.BlockHousingRetainers;
+        if (ImGui.Checkbox("Block Housing Retainers", ref blockHousingRetainers))
+        {
+            configuration.BlockHousingRetainers = blockHousingRetainers;
+            configuration.Save();
+        }
+        
         if (!configuration.ChildLockEnabled)
         {
             ImGui.EndDisabled();
