@@ -37,6 +37,7 @@ public sealed class Plugin : IDalamudPlugin
     private HousingFoodWatcher HousingFoodWatcher { get; init; }
     private LevequestWatcher LevequestWatcher { get; init; }
     private HousingRetainerWatcher HousingRetainerWatcher { get; init; }
+    private AdditionalChambersWatcher AdditionalChambersWatcher { get; init; }
 
     // Track spam command executions
     private readonly List<DateTime> spamCommandTimestamps = new();
@@ -84,6 +85,9 @@ public sealed class Plugin : IDalamudPlugin
         // Initialize housing retainer watcher
         HousingRetainerWatcher = new HousingRetainerWatcher(AddonLifecycle, GameGui, ChatGui, TargetManager, Configuration);
 
+        // Initialize additional chambers watcher
+        AdditionalChambersWatcher = new AdditionalChambersWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
+
         CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
         {
             HelpMessage = "Toggle Child Safety Lock"
@@ -128,6 +132,7 @@ public sealed class Plugin : IDalamudPlugin
         HousingFoodWatcher.Dispose();
         LevequestWatcher.Dispose();
         HousingRetainerWatcher.Dispose();
+        AdditionalChambersWatcher.Dispose();
 
         CommandManager.RemoveHandler(ChildLockCommandName);
         CommandManager.RemoveHandler(ChildLockSpamCommandName);

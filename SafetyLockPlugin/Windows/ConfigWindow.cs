@@ -143,6 +143,13 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
         
+        var blockAdditionalChambers = configuration.BlockAdditionalChambers;
+        if (ImGui.Checkbox("Block Additional Chambers", ref blockAdditionalChambers))
+        {
+            configuration.BlockAdditionalChambers = blockAdditionalChambers;
+            configuration.Save();
+        }
+        
         if (!configuration.ChildLockEnabled)
         {
             ImGui.EndDisabled();
