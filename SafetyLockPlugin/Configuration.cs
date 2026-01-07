@@ -1,4 +1,4 @@
-﻿﻿using Dalamud.Configuration;
+﻿﻿﻿using Dalamud.Configuration;
 using System;
 
 namespace SafetyLockPlugin;
@@ -26,6 +26,7 @@ public class Configuration : IPluginConfiguration
     public bool BlockLevequests { get; set; } = true;
     public bool BlockHousingRetainers { get; set; } = true;
     public bool BlockAdditionalChambers { get; set; } = true;
+    public bool BlockHousingPictureFrames { get; set; } = true;
 
     // The below exists just to make saving less cumbersome
     public void Save()

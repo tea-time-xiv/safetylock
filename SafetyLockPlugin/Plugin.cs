@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Command;
+﻿﻿using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
@@ -38,6 +38,7 @@ public sealed class Plugin : IDalamudPlugin
     private LevequestWatcher LevequestWatcher { get; init; }
     private HousingRetainerWatcher HousingRetainerWatcher { get; init; }
     private AdditionalChambersWatcher AdditionalChambersWatcher { get; init; }
+    private HousingPictureFrameWatcher HousingPictureFrameWatcher { get; init; }
 
     // Track spam command executions
     private readonly List<DateTime> spamCommandTimestamps = new();
@@ -88,6 +89,9 @@ public sealed class Plugin : IDalamudPlugin
         // Initialize additional chambers watcher
         AdditionalChambersWatcher = new AdditionalChambersWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
+        // Initialize housing picture frame watcher
+        HousingPictureFrameWatcher = new HousingPictureFrameWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
+
         CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
         {
             HelpMessage = "Toggle Child Safety Lock"
@@ -133,6 +137,7 @@ public sealed class Plugin : IDalamudPlugin
         LevequestWatcher.Dispose();
         HousingRetainerWatcher.Dispose();
         AdditionalChambersWatcher.Dispose();
+        HousingPictureFrameWatcher.Dispose();
 
         CommandManager.RemoveHandler(ChildLockCommandName);
         CommandManager.RemoveHandler(ChildLockSpamCommandName);

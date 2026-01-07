@@ -1,4 +1,4 @@
-﻿﻿﻿using System;
+﻿﻿﻿﻿using System;
 using System.Numerics;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Windowing;
@@ -147,6 +147,13 @@ public class ConfigWindow : Window, IDisposable
         if (ImGui.Checkbox("Block Additional Chambers", ref blockAdditionalChambers))
         {
             configuration.BlockAdditionalChambers = blockAdditionalChambers;
+            configuration.Save();
+        }
+        
+        var blockHousingPictureFrames = configuration.BlockHousingPictureFrames;
+        if (ImGui.Checkbox("Block Housing Picture Frames", ref blockHousingPictureFrames))
+        {
+            configuration.BlockHousingPictureFrames = blockHousingPictureFrames;
             configuration.Save();
         }
         
