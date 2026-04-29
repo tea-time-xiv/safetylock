@@ -1,0 +1,18 @@
+[
+  {
+    "InternalName": "SafetyLockPlugin",
+    "Name": "Child Safety Lock",
+    "Author": "frituurpan",
+    "Punchline": "Soft Child Safety Lock to prevent accidental in-game interactions",
+    "Description": "Blocks vendor windows, duty finder interactions, and quest acceptance dialogs when enabled. Use /childlock to toggle. Features enable-on-startup and individual feature toggles.",
+    "RepoUrl": "https://github.com/frituurpan/safetylock",
+    "Version": "1.0.0.0",
+    "DalamudApiLevel": 15,
+    "ApplicableVersion": "any",
+    "Tags": ["ui", "safety", "utility"],
+    "IsHide": false,
+    "IsTestingExclusive": false,
+    "DownloadLinkInstall": "https://github.com/frituurpan/safetylock/releases/latest/download/SafetyLockPlugin.zip",
+    "DownloadLinkUpdate": "https://github.com/frituurpan/safetylock/releases/latest/download/SafetyLockPlugin.zip"
+  }
+]
