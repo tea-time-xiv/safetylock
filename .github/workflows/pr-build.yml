@@ -6,6 +6,9 @@ on:
   push:
     branches: [ master ]
 
+permissions:
+  contents: write
+
 jobs:
 
   build:
@@ -31,10 +34,26 @@ jobs:
     - name: Build with dotnet
       run: dotnet build --configuration Release
 
+    - name: Package plugin
+      run: |
+        Push-Location ".\SafetyLockPlugin\bin\x64\Release"
+        Compress-Archive -Path "SafetyLockPlugin.dll", "SafetyLockPlugin.json", "images" -DestinationPath "$env:GITHUB_WORKSPACE\SafetyLockPlugin.zip"
+        Pop-Location
+
     - name: Store artifacts
       uses: actions/upload-artifact@v4
       with:
         name: SafetyLockPlugin
-        path: .\SafetyLockPlugin\bin\x64\Release\SafetyLockPlugin\*
+        path: SafetyLockPlugin.zip
         if-no-files-found: error
         retention-days: 1
+
+    - name: Release
+      if: github.event_name == 'push'
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "SafetyLockPlugin.zip"
+        tag: latest
+        allowUpdates: true
+        removeArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN }}
