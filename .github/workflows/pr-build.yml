@@ -21,6 +21,19 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5
 
+    - name: Read version from csproj
+      run: |
+        $version = ([xml](Get-Content "SafetyLockPlugin/SafetyLockPlugin.csproj")).Project.PropertyGroup.Version
+        "VERSION=$version" >> $env:GITHUB_ENV
+
+    - name: Check if release tag exists
+      run: |
+        git fetch --tags
+        $tag = "v$env:VERSION"
+        $exists = git tag -l $tag
+        $skip = if ($exists) { "true" } else { "false" }
+        "SKIP_RELEASE=$skip" >> $env:GITHUB_ENV
+
     - name: Install .NET
       uses: actions/setup-dotnet@v5
       with:
@@ -49,11 +62,46 @@ jobs:
         retention-days: 1
 
     - name: Release
-      if: github.event_name == 'push'
+      if: github.event_name == 'push' && env.SKIP_RELEASE == 'false'
       uses: ncipollo/release-action@v1
       with:
         artifacts: "SafetyLockPlugin.zip"
-        tag: latest
-        allowUpdates: true
-        removeArtifacts: true
+        tag: v${{ env.VERSION }}
+        name: Safety Lock v${{ env.VERSION }}
         token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Update pluginmaster
+      if: github.event_name == 'push' && env.SKIP_RELEASE == 'false'
+      shell: pwsh
+      env:
+        PLUGINMASTER_TOKEN: ${{ secrets.PLUGINMASTER_TOKEN }}
+      run: |
+        git clone https://x-access-token:$env:PLUGINMASTER_TOKEN@github.com/tea-time-xiv/pluginmaster.git pluginmaster-repo
+        $version = $env:VERSION
+        $downloadUrl = "https://github.com/tea-time-xiv/safetylock/releases/download/v$version/SafetyLockPlugin.zip"
+        $entry = [ordered]@{
+            InternalName       = "SafetyLockPlugin"
+            Name               = "Safety Lock"
+            Author             = "tea-time-xiv"
+            Punchline          = "Soft Safety Lock to prevent accidental in-game interactions"
+            Description        = "Blocks vendor windows, duty finder interactions, and quest acceptance dialogs when enabled. Use /safetylock to toggle. Features enable-on-startup and individual feature toggles."
+            RepoUrl            = "https://github.com/tea-time-xiv/safetylock"
+            Version            = $version
+            DalamudApiLevel    = 15
+            ApplicableVersion  = "any"
+            Tags               = @("ui", "safety", "utility")
+            IsHide             = $false
+            IsTestingExclusive = $false
+            DownloadLinkInstall = $downloadUrl
+            DownloadLinkUpdate  = $downloadUrl
+        }
+        $json = $entry | ConvertTo-Json -Depth 3
+        Set-Content "pluginmaster-repo/pluginmaster.json" "[$json]" -Encoding utf8NoBOM
+        Push-Location pluginmaster-repo
+        git symbolic-ref HEAD refs/heads/master
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git add pluginmaster.json
+        git commit -m "Release v$version"
+        git push -u origin master
+        Pop-Location
