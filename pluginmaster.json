@@ -2,17 +2,17 @@
   {
     "InternalName": "SafetyLockPlugin",
     "Name": "Child Safety Lock",
-    "Author": "frituurpan",
+    "Author": "tea-time-xiv",
     "Punchline": "Soft Child Safety Lock to prevent accidental in-game interactions",
     "Description": "Blocks vendor windows, duty finder interactions, and quest acceptance dialogs when enabled. Use /childlock to toggle. Features enable-on-startup and individual feature toggles.",
-    "RepoUrl": "https://github.com/frituurpan/safetylock",
+    "RepoUrl": "https://github.com/tea-time-xiv/safetylock",
     "Version": "1.0.0.0",
     "DalamudApiLevel": 15,
     "ApplicableVersion": "any",
     "Tags": ["ui", "safety", "utility"],
     "IsHide": false,
     "IsTestingExclusive": false,
-    "DownloadLinkInstall": "https://github.com/frituurpan/safetylock/releases/latest/download/SafetyLockPlugin.zip",
-    "DownloadLinkUpdate": "https://github.com/frituurpan/safetylock/releases/latest/download/SafetyLockPlugin.zip"
+    "DownloadLinkInstall": "https://github.com/tea-time-xiv/safetylock/releases/latest/download/SafetyLockPlugin.zip",
+    "DownloadLinkUpdate": "https://github.com/tea-time-xiv/safetylock/releases/latest/download/SafetyLockPlugin.zip"
   }
 ]
