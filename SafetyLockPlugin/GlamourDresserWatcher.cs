@@ -1,7 +1,6 @@
 ﻿using System;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
-using Dalamud.Game.NativeWrapper;
 using Dalamud.Plugin.Services;
 
 namespace SafetyLockPlugin;
