@@ -6,7 +6,7 @@ using Dalamud.Plugin.Services;
 namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for Free Company Chest UI addons and blocks access while Child Safety Lock is enabled.
+/// Watches for Free Company Chest UI addons and blocks access while Safety Lock is enabled.
 /// </summary>
 public sealed class FreeCompanyChestWatcher : IDisposable
 {
@@ -30,8 +30,8 @@ public sealed class FreeCompanyChestWatcher : IDisposable
 
     private void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Only react if Child Safety Lock is enabled and FC chest blocking is enabled
-        if (!configuration.ChildLockEnabled || !configuration.BlockFreeCompanyChest)
+        // Only react if Safety Lock is enabled and FC chest blocking is enabled
+        if (!configuration.LockEnabled || !configuration.BlockFreeCompanyChest)
         {
             return;
         }
@@ -47,7 +47,7 @@ public sealed class FreeCompanyChestWatcher : IDisposable
         {
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
-        chatGui.Print("Free Company Chest interaction blocked (Child Safety Lock enabled)");
+        chatGui.Print("Free Company Chest interaction blocked (Safety Lock enabled)");
     }
 
     public void Dispose()

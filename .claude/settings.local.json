@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)",
+      "Bash(git -C /home/johan/project-private/safetylock config --list --show-origin)",
+      "Bash(git -C /home/johan/project-private/planary log --format=\"%H %ae %s\")",
+      "Bash(git *)"
+    ]
+  }
+}

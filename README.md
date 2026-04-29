@@ -1,14 +1,22 @@
-# Child Safety Lock
+# Safety Lock
 
-A Dalamud plugin that provides a soft "Child Safety Lock" feature for Final Fantasy XIV. When enabled, it blocks certain in-game interactions to prevent accidental actions.
+A Dalamud plugin that provides a soft "Safety Lock" feature for Final Fantasy XIV. When enabled, it blocks certain in-game interactions to prevent accidental actions.
 
 ## Features
 
-When Child Safety Lock is enabled, the following interactions are blocked:
+When Safety Lock is enabled, the following interactions are blocked:
 
 - **Vendor Windows** - Prevents opening vendor/shop interfaces
 - **Duty Finder** - Prevents interacting with duty finder UI
 - **Quest Acceptance** - Prevents accepting new quests
+- **Glamour Dresser** - Prevents opening the glamour dresser
+- **Armoire** - Prevents opening the armoire
+- **Free Company Chest** - Prevents opening the FC chest
+- **Housing Food** - Prevents consuming housing food
+- **Levequests** - Prevents accepting levequests
+- **Housing Retainers** - Prevents interacting with housing estate retainers
+- **Additional Chambers** - Prevents entering additional chambers in FC houses
+- **Housing Picture Frames** - Prevents interacting with housing picture frames
 
 Each feature can be individually toggled on or off in the configuration.
 
@@ -16,54 +24,50 @@ Each feature can be individually toggled on or off in the configuration.
 
 ### Commands
 
-- `/childlock` - Toggle Child Safety Lock on/off
-- `/childlockspam` - Requires 5 executions within 5 seconds to toggle (prevents accidental toggles)
-- `/pmycommand` - Opens the main plugin window
+- `/safetylock` - Toggle Safety Lock on/off
+- `/safetylockspam` - Requires 5 executions within 5 seconds to toggle (prevents accidental toggles)
 
 ### Configuration
 
-Open the configuration window via:
-- The plugin installer interface
-- In-game `/xlplugins` menu
+Open the configuration window via the plugin installer interface or the in-game `/xlplugins` menu.
 
 Configuration options:
-- **Enable Child Safety Lock** - Master on/off toggle
-- **Enable on Startup** - Automatically enable Child Safety Lock when the plugin loads
-- **Block Vendors** - Enable/disable vendor blocking
-- **Block Duty Finder** - Enable/disable duty finder blocking
-- **Block Quests** - Enable/disable quest acceptance blocking
+- **Enable Safety Lock** - Master on/off toggle
+- **Enable on Startup** - Automatically enable Safety Lock when the plugin loads
+- Individual block toggles for each feature
 
 ## Important Notes
 
-⚠️ **This is UI-level blocking only.** The plugin operates by closing or preventing UI elements from being interacted with. It does not modify game memory, intercept packets, or perform engine-level blocking. The lock is best-effort and may not catch every edge case.
+⚠️ **This is UI-level blocking only.** The plugin operates by closing UI elements after they open. It does not modify game memory, intercept packets, or perform engine-level blocking. The lock is best-effort and may not catch every edge case.
 
 ## Installation
 
-Install via the Dalamud plugin installer in XIVLauncher.
+1. Add the custom repo to Dalamud: `https://raw.githubusercontent.com/tea-time-xiv/safetylock/master/pluginmaster.json`
+2. Install via the Dalamud plugin installer in XIVLauncher.
 
 ## Prerequisites
 
 * XIVLauncher, FINAL FANTASY XIV, and Dalamud must be installed
-* The game must have been run with Dalamud at least once
 
 ## Development
 
 ### Building
 
-1. Open up `SamplePlugin.sln` in your C# editor of choice (Visual Studio 2022 or JetBrains Rider).
-2. Build the solution. By default, this will build a `Debug` build, but you can switch to `Release`.
-3. The resulting plugin can be found at `SamplePlugin/bin/x64/Debug/SamplePlugin.dll` (or `Release` if appropriate.)
+```bash
+dotnet build --configuration Release
+```
+
+Output: `SafetyLockPlugin/bin/x64/Release/`
 
 ### Testing in-game
 
-1. Launch the game and use `/xlsettings` in chat to open up the Dalamud settings.
-2. Go to `Experimental`, and add the full path to the `SamplePlugin.dll` to the list of Dev Plugin Locations.
-3. Use `/xlplugins` to open the Plugin Installer, go to `Dev Tools > Installed Dev Plugins`, and enable the plugin.
-4. You should now be able to use `/childlock` to toggle the Child Safety Lock!
+1. Use `/xlsettings` → Experimental, add the full path to `SafetyLockPlugin.dll` as a Dev Plugin Location.
+2. Use `/xlplugins` → Dev Tools → Installed Dev Plugins, enable the plugin.
+3. Use `/safetylock` to toggle Safety Lock.
 
 ## License
 
-This project is licensed under the AGPL-3.0-or-later license. See [LICENSE.md](LICENSE.md) for details.
+AGPL-3.0-or-later. See [LICENSE.md](LICENSE.md) for details.
 
 ## Disclaimer
 

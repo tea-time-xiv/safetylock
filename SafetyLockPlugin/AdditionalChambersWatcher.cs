@@ -8,7 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for "Entrance to Additional Chambers" menu in Free Company houses and blocks it when Child Safety Lock is enabled.
+/// Watches for "Entrance to Additional Chambers" menu in Free Company houses and blocks it when Safety Lock is enabled.
 /// </summary>
 public sealed class AdditionalChambersWatcher : IDisposable
 {
@@ -32,8 +32,8 @@ public sealed class AdditionalChambersWatcher : IDisposable
 
     private void OnSelectStringEvent(AddonEvent type, AddonArgs args)
     {
-        // Only react if Child Safety Lock is enabled and additional chambers blocking is enabled
-        if (!configuration.ChildLockEnabled || !configuration.BlockAdditionalChambers)
+        // Only react if Safety Lock is enabled and additional chambers blocking is enabled
+        if (!configuration.LockEnabled || !configuration.BlockAdditionalChambers)
         {
             return;
         }
@@ -68,7 +68,7 @@ public sealed class AdditionalChambersWatcher : IDisposable
                     var now = DateTime.UtcNow;
                     if ((now - lastChatMessageTime).TotalSeconds >= 1)
                     {
-                        chatGui.Print("Additional chambers access blocked (Child Safety Lock enabled)");
+                        chatGui.Print("Additional chambers access blocked (Safety Lock enabled)");
                         lastChatMessageTime = now;
                     }
                     

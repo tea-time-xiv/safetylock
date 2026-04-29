@@ -1,4 +1,4 @@
-﻿﻿using Dalamud.Game.Command;
+using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Interface.Windowing;
@@ -20,12 +20,12 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IClientState ClientState { get; private set; } = null!;
     [PluginService] internal static ITargetManager TargetManager { get; private set; } = null!;
 
-    private const string ChildLockCommandName = "/childlock";
-    private const string ChildLockSpamCommandName = "/childlockspam";
+    private const string SafetyLockCommandName = "/safetylock";
+    private const string SafetyLockSpamCommandName = "/safetylockspam";
 
     public Configuration Configuration { get; init; }
 
-    public readonly WindowSystem WindowSystem = new("ChildLock");
+    public readonly WindowSystem WindowSystem = new("SafetyLock");
     private ConfigWindow ConfigWindow { get; init; }
     private MainWindow MainWindow { get; init; }
     private VendorWatcher VendorWatcher { get; init; }
@@ -51,7 +51,7 @@ public sealed class Plugin : IDalamudPlugin
         // Apply EnableOnStartup setting (runtime-only; do not persist here)
         if (Configuration.EnableOnStartup)
         {
-            Configuration.ChildLockEnabled = true;
+            Configuration.LockEnabled = true;
         }
 
         ConfigWindow = new ConfigWindow(this);
@@ -60,73 +60,42 @@ public sealed class Plugin : IDalamudPlugin
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);
 
-        // Initialize vendor watcher
         VendorWatcher = new VendorWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize duty finder watcher
         DutyFinderWatcher = new DutyFinderWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize quest watcher
         QuestWatcher = new QuestWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize glamour dresser watcher
         GlamourDresserWatcher = new GlamourDresserWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize armoire watcher
         ArmoireWatcher = new ArmoireWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize free company chest watcher
         FreeCompanyChestWatcher = new FreeCompanyChestWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize housing food watcher
         HousingFoodWatcher = new HousingFoodWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize levequest watcher
         LevequestWatcher = new LevequestWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize housing retainer watcher
         HousingRetainerWatcher = new HousingRetainerWatcher(AddonLifecycle, GameGui, ChatGui, TargetManager, Configuration);
-
-        // Initialize additional chambers watcher
         AdditionalChambersWatcher = new AdditionalChambersWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize housing picture frame watcher
         HousingPictureFrameWatcher = new HousingPictureFrameWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-
-        // Initialize levemete menu watcher
         LevemeteMenuWatcher = new LevemeteMenuWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
-        CommandManager.AddHandler(ChildLockCommandName, new CommandInfo(OnChildLockCommand)
+        CommandManager.AddHandler(SafetyLockCommandName, new CommandInfo(OnSafetyLockCommand)
         {
-            HelpMessage = "Toggle Child Safety Lock"
+            HelpMessage = "Toggle Safety Lock"
         });
 
-        CommandManager.AddHandler(ChildLockSpamCommandName, new CommandInfo(OnChildLockSpamCommand)
+        CommandManager.AddHandler(SafetyLockSpamCommandName, new CommandInfo(OnSafetyLockSpamCommand)
         {
-            HelpMessage = "Toggle Child Safety Lock (requires 5 executions within 5 seconds)"
+            HelpMessage = "Toggle Safety Lock (requires 5 executions within 5 seconds)"
         });
 
-        // Tell the UI system that we want our windows to be drawn through the window system
         PluginInterface.UiBuilder.Draw += WindowSystem.Draw;
-
-        // This adds a button to the plugin installer entry of this plugin which allows
-        // toggling the display status of the configuration ui
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUi;
-
-        // Adds another button doing the same but for the main ui of the plugin
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUi;
 
-        // Add a simple message to the log
-        Log.Information("Child Safety Lock plugin loaded successfully");
+        Log.Information("Safety Lock plugin loaded successfully");
     }
 
     public void Dispose()
     {
-        // Unregister all actions to not leak anything during disposal of plugin
         PluginInterface.UiBuilder.Draw -= WindowSystem.Draw;
         PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUi;
         PluginInterface.UiBuilder.OpenMainUi -= ToggleMainUi;
-        
+
         WindowSystem.RemoveAllWindows();
 
         ConfigWindow.Dispose();
@@ -144,54 +113,36 @@ public sealed class Plugin : IDalamudPlugin
         HousingPictureFrameWatcher.Dispose();
         LevemeteMenuWatcher.Dispose();
 
-        CommandManager.RemoveHandler(ChildLockCommandName);
-        CommandManager.RemoveHandler(ChildLockSpamCommandName);
+        CommandManager.RemoveHandler(SafetyLockCommandName);
+        CommandManager.RemoveHandler(SafetyLockSpamCommandName);
     }
 
-    private void OnChildLockCommand(string command, string args)
+    private void OnSafetyLockCommand(string command, string args)
     {
-        // Toggle Child Safety Lock
-        Configuration.ChildLockEnabled = !Configuration.ChildLockEnabled;
-        
-        // Save the config
+        Configuration.LockEnabled = !Configuration.LockEnabled;
         Configuration.Save();
-        
-        // Print chat message
-        var status = Configuration.ChildLockEnabled ? "Enabled" : "Disabled";
-        ChatGui.Print($"Child Safety Lock: {status}");
+        var status = Configuration.LockEnabled ? "Enabled" : "Disabled";
+        ChatGui.Print($"Safety Lock: {status}");
     }
 
-    private void OnChildLockSpamCommand(string command, string args)
+    private void OnSafetyLockSpamCommand(string command, string args)
     {
         var now = DateTime.UtcNow;
         var fiveSecondsAgo = now.AddSeconds(-5);
-        
-        // Remove timestamps older than 5 seconds
+
         spamCommandTimestamps.RemoveAll(t => t < fiveSecondsAgo);
-        
-        // Add current timestamp
         spamCommandTimestamps.Add(now);
-        
-        // Check if we have 5 executions within 5 seconds
+
         if (spamCommandTimestamps.Count >= 5)
         {
-            // Toggle Child Safety Lock
-            Configuration.ChildLockEnabled = !Configuration.ChildLockEnabled;
-            
-            // Save the config
+            Configuration.LockEnabled = !Configuration.LockEnabled;
             Configuration.Save();
-            
-            // Clear timestamps
             spamCommandTimestamps.Clear();
-            
-            // Print chat message
-            var status = Configuration.ChildLockEnabled ? "Enabled" : "Disabled";
-            ChatGui.Print($"Child Safety Lock: {status}");
+            var status = Configuration.LockEnabled ? "Enabled" : "Disabled";
+            ChatGui.Print($"Safety Lock: {status}");
         }
-        // If fewer than 5, do nothing (no chat message)
     }
-    
+
     public void ToggleConfigUi() => ConfigWindow.Toggle();
     public void ToggleMainUi() => MainWindow.Toggle();
 }
-

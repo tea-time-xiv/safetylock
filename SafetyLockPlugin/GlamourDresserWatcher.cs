@@ -7,7 +7,7 @@ using Dalamud.Plugin.Services;
 namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for Glamour Dresser UI addons and blocks them when Child Safety Lock is enabled.
+/// Watches for Glamour Dresser UI addons and blocks them when Safety Lock is enabled.
 /// </summary>
 public sealed class GlamourDresserWatcher : IDisposable
 {
@@ -30,8 +30,8 @@ public sealed class GlamourDresserWatcher : IDisposable
 
     private void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Only react if Child Safety Lock is enabled and glamour dresser blocking is enabled
-        if (!configuration.ChildLockEnabled || !configuration.BlockGlamourDresser)
+        // Only react if Safety Lock is enabled and glamour dresser blocking is enabled
+        if (!configuration.LockEnabled || !configuration.BlockGlamourDresser)
         {
             return;
         }
@@ -47,7 +47,7 @@ public sealed class GlamourDresserWatcher : IDisposable
         {
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
-        chatGui.Print("Glamour Dresser blocked (Child Lock enabled)");
+        chatGui.Print("Glamour Dresser blocked (Safety Lock enabled)");
     }
 
     public void Dispose()

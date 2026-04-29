@@ -8,7 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for Levemete root SelectString menus and blocks them when Child Safety Lock is enabled.
+/// Watches for Levemete root SelectString menus and blocks them when Safety Lock is enabled.
 /// </summary>
 public sealed class LevemeteMenuWatcher : IDisposable
 {
@@ -32,8 +32,8 @@ public sealed class LevemeteMenuWatcher : IDisposable
 
     private void OnSelectStringEvent(AddonEvent type, AddonArgs args)
     {
-        // Only react if Child Safety Lock is enabled and levequest blocking is enabled
-        if (!configuration.ChildLockEnabled || !configuration.BlockLevequests)
+        // Only react if Safety Lock is enabled and levequest blocking is enabled
+        if (!configuration.LockEnabled || !configuration.BlockLevequests)
         {
             return;
         }
@@ -70,7 +70,7 @@ public sealed class LevemeteMenuWatcher : IDisposable
                     var now = DateTime.UtcNow;
                     if ((now - lastChatMessageTime).TotalSeconds >= 1)
                     {
-                        chatGui.Print("Levequest interaction blocked (Child Safety Lock enabled)");
+                        chatGui.Print("Levequest interaction blocked (Safety Lock enabled)");
                         lastChatMessageTime = now;
                     }
                     

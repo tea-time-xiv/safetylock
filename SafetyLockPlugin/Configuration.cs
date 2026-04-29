@@ -11,8 +11,8 @@ public class Configuration : IPluginConfiguration
     public bool IsConfigWindowMovable { get; set; } = true;
     public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
 
-    // Child Safety Lock
-    public bool ChildLockEnabled { get; set; } = false;
+    // Safety Lock
+    public bool LockEnabled { get; set; } = false;
     public bool EnableOnStartup { get; set; } = false;
 
     // Feature toggles

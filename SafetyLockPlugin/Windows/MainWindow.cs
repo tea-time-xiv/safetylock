@@ -10,7 +10,7 @@ public class MainWindow : Window, IDisposable
     private readonly Plugin plugin;
 
     public MainWindow(Plugin plugin)
-        : base("Child Safety Lock##ChildLockMainWindow", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+        : base("Safety Lock##SafetyLockMainWindow", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {
         SizeConstraints = new WindowSizeConstraints
         {
@@ -25,14 +25,14 @@ public class MainWindow : Window, IDisposable
 
     public override void Draw()
     {
-        ImGui.TextUnformatted("Child Safety Lock Plugin");
+        ImGui.TextUnformatted("Safety Lock Plugin");
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
 
         // Current status
         ImGui.TextUnformatted("Current Status:");
-        if (plugin.Configuration.ChildLockEnabled)
+        if (plugin.Configuration.LockEnabled)
         {
             ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(0.0f, 1.0f, 0.0f, 1.0f)); // Green
             ImGui.TextUnformatted("ENABLED");
@@ -50,9 +50,9 @@ public class MainWindow : Window, IDisposable
         ImGui.Spacing();
 
         // Quick toggle
-        if (ImGui.Button("Toggle Child Safety Lock"))
+        if (ImGui.Button("Toggle Safety Lock"))
         {
-            plugin.Configuration.ChildLockEnabled = !plugin.Configuration.ChildLockEnabled;
+            plugin.Configuration.LockEnabled = !plugin.Configuration.LockEnabled;
             plugin.Configuration.Save();
         }
 
@@ -69,7 +69,7 @@ public class MainWindow : Window, IDisposable
         ImGui.Spacing();
 
         // Info
-        ImGui.TextWrapped("Use /childlock to quickly toggle the Child Safety Lock on/off.");
+        ImGui.TextWrapped("Use /safetylock to quickly toggle Safety Lock on/off.");
     }
 }
 

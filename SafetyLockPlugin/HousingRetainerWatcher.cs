@@ -7,7 +7,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for housing retainer UI addons and blocks access while Child Safety Lock is enabled.
+/// Watches for housing retainer UI addons and blocks access while Safety Lock is enabled.
 /// Only blocks housing estate retainers, not summoning bell retainers.
 /// Uses target detection to differentiate between summoning bells and housing retainers.
 /// </summary>
@@ -35,8 +35,8 @@ public sealed class HousingRetainerWatcher : IDisposable
 
     private void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Only react if Child Safety Lock is enabled and housing retainer blocking is enabled
-        if (!configuration.ChildLockEnabled || !configuration.BlockHousingRetainers)
+        // Only react if Safety Lock is enabled and housing retainer blocking is enabled
+        if (!configuration.LockEnabled || !configuration.BlockHousingRetainers)
         {
             return;
         }
@@ -83,7 +83,7 @@ public sealed class HousingRetainerWatcher : IDisposable
                 {
                     ((AtkUnitBase*)addon.Address)->Close(true);
                 }
-                chatGui.Print("Housing retainer interaction blocked (Child Safety Lock enabled)");
+                chatGui.Print("Housing retainer interaction blocked (Safety Lock enabled)");
             }
         }
     }

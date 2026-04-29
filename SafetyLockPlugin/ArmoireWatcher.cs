@@ -6,7 +6,7 @@ using Dalamud.Plugin.Services;
 namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for Armoire UI addons and blocks them when Child Safety Lock is enabled.
+/// Watches for Armoire UI addons and blocks them when Safety Lock is enabled.
 /// </summary>
 public sealed class ArmoireWatcher : IDisposable
 {
@@ -30,8 +30,8 @@ public sealed class ArmoireWatcher : IDisposable
 
     private void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Only react if Child Safety Lock is enabled and armoire blocking is enabled
-        if (!configuration.ChildLockEnabled || !configuration.BlockArmoire)
+        // Only react if Safety Lock is enabled and armoire blocking is enabled
+        if (!configuration.LockEnabled || !configuration.BlockArmoire)
         {
             return;
         }
@@ -47,7 +47,7 @@ public sealed class ArmoireWatcher : IDisposable
         {
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
-        chatGui.Print("Armoire blocked (Child Safety Lock enabled)");
+        chatGui.Print("Armoire blocked (Safety Lock enabled)");
     }
 
     public void Dispose()

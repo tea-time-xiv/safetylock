@@ -6,7 +6,7 @@ using Dalamud.Plugin.Services;
 namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for levequest UI addons and blocks them when Child Safety Lock is enabled.
+/// Watches for levequest UI addons and blocks them when Safety Lock is enabled.
 /// </summary>
 public sealed class LevequestWatcher : IDisposable
 {
@@ -32,8 +32,8 @@ public sealed class LevequestWatcher : IDisposable
 
     private void OnAddonPostSetup(AddonEvent type, AddonArgs args)
     {
-        // Reset debounce flag if Child Safety Lock is disabled
-        if (!configuration.ChildLockEnabled || !configuration.BlockLevequests)
+        // Reset debounce flag if Safety Lock is disabled
+        if (!configuration.LockEnabled || !configuration.BlockLevequests)
         {
             hasBlockedLeve = false;
             return;
@@ -71,7 +71,7 @@ public sealed class LevequestWatcher : IDisposable
         // Set debounce flag
         hasBlockedLeve = true;
         
-        chatGui.Print("Levequest acceptance blocked (Child Safety Lock enabled)");
+        chatGui.Print("Levequest acceptance blocked (Safety Lock enabled)");
     }
 
 

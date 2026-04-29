@@ -8,7 +8,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for housing food consumption confirmation dialogs and blocks them when Child Safety Lock is enabled.
+/// Watches for housing food consumption confirmation dialogs and blocks them when Safety Lock is enabled.
 /// </summary>
 public sealed class HousingFoodWatcher : IDisposable
 {
@@ -32,8 +32,8 @@ public sealed class HousingFoodWatcher : IDisposable
 
     private void OnAddonEvent(AddonEvent type, AddonArgs args)
     {
-        // Only react if Child Safety Lock is enabled and housing food blocking is enabled
-        if (!configuration.ChildLockEnabled || !configuration.BlockHousingFood)
+        // Only react if Safety Lock is enabled and housing food blocking is enabled
+        if (!configuration.LockEnabled || !configuration.BlockHousingFood)
         {
             return;
         }
@@ -78,7 +78,7 @@ public sealed class HousingFoodWatcher : IDisposable
                 {
                     // This is a housing food confirmation - close it
                     unit->Close(true);
-                    chatGui.Print("Housing food consumption blocked (Child Safety Lock enabled)");
+                    chatGui.Print("Housing food consumption blocked (Safety Lock enabled)");
                     return;
                 }
             }

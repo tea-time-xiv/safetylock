@@ -8,7 +8,7 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 namespace SafetyLockPlugin;
 
 /// <summary>
-/// Watches for housing picture frame menus and blocks them when Child Safety Lock is enabled.
+/// Watches for housing picture frame menus and blocks them when Safety Lock is enabled.
 /// </summary>
 public sealed class HousingPictureFrameWatcher : IDisposable
 {
@@ -32,8 +32,8 @@ public sealed class HousingPictureFrameWatcher : IDisposable
 
     private void OnSelectStringEvent(AddonEvent type, AddonArgs args)
     {
-        // Only react if Child Safety Lock is enabled and picture frame blocking is enabled
-        if (!configuration.ChildLockEnabled || !configuration.BlockHousingPictureFrames)
+        // Only react if Safety Lock is enabled and picture frame blocking is enabled
+        if (!configuration.LockEnabled || !configuration.BlockHousingPictureFrames)
         {
             return;
         }
@@ -68,7 +68,7 @@ public sealed class HousingPictureFrameWatcher : IDisposable
                     var now = DateTime.UtcNow;
                     if ((now - lastChatMessageTime).TotalSeconds >= 1)
                     {
-                        chatGui.Print("Housing picture frame access blocked (Child Safety Lock enabled)");
+                        chatGui.Print("Housing picture frame access blocked (Safety Lock enabled)");
                         lastChatMessageTime = now;
                     }
                     
