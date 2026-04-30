@@ -79,19 +79,21 @@ jobs:
         git clone https://x-access-token:$env:PLUGINMASTER_TOKEN@github.com/tea-time-xiv/pluginmaster.git pluginmaster-repo
         $version = $env:VERSION
         $downloadUrl = "https://github.com/tea-time-xiv/safetylock/releases/download/v$version/SafetyLockPlugin.zip"
+        $lastUpdate = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
         $entry = [ordered]@{
-            InternalName       = "SafetyLockPlugin"
-            Name               = "Safety Lock"
             Author             = "tea-time-xiv"
+            Name               = "Safety Lock"
             Punchline          = "Soft Safety Lock to prevent accidental in-game interactions"
             Description        = "Blocks vendor windows, duty finder interactions, and quest acceptance dialogs when enabled. Use /safetylock to toggle. Features enable-on-startup and individual feature toggles."
-            RepoUrl            = "https://github.com/tea-time-xiv/safetylock"
-            Version            = $version
-            DalamudApiLevel    = 15
-            ApplicableVersion  = "any"
-            Tags               = @("ui", "safety", "utility")
+            Changelog          = "- $version"
             IsHide             = $false
+            InternalName       = "SafetyLockPlugin"
+            AssemblyVersion    = $version
             IsTestingExclusive = $false
+            ApplicableVersion  = "any"
+            DalamudApiLevel    = 15
+            DownloadCount      = 0
+            LastUpdate         = $lastUpdate
             DownloadLinkInstall = $downloadUrl
             DownloadLinkUpdate  = $downloadUrl
         }
