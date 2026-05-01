@@ -97,8 +97,11 @@ jobs:
             DownloadLinkInstall = $downloadUrl
             DownloadLinkUpdate  = $downloadUrl
         }
-        $json = $entry | ConvertTo-Json -Depth 3
-        Set-Content "pluginmaster-repo/pluginmaster.json" "[$json]" -Encoding utf8NoBOM
+        $existing = Get-Content "pluginmaster-repo/pluginmaster.json" | ConvertFrom-Json
+        $filtered = @($existing | Where-Object { $_.InternalName -ne "SafetyLockPlugin" })
+        $merged = $filtered + @($entry)
+        $json = $merged | ConvertTo-Json -Depth 3
+        Set-Content "pluginmaster-repo/pluginmaster.json" $json -Encoding utf8NoBOM
         Push-Location pluginmaster-repo
         git symbolic-ref HEAD refs/heads/master
         git config user.name "github-actions[bot]"
