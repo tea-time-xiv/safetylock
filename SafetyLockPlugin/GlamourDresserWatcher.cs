@@ -46,7 +46,7 @@ public sealed class GlamourDresserWatcher : IDisposable
         {
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
-        chatGui.Print("Glamour Dresser blocked (Safety Lock enabled)");
+        chatGui.Print(Localization.GlamourDresser.BlockedMessage);
     }
 
     public void Dispose()

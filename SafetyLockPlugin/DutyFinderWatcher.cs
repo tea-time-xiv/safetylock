@@ -46,7 +46,7 @@ public sealed class DutyFinderWatcher : IDisposable
         {
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
-        chatGui.Print("Duty Finder blocked (Safety Lock enabled)");
+        chatGui.Print(Localization.DutyFinder.BlockedMessage);
     }
 
     public void Dispose()

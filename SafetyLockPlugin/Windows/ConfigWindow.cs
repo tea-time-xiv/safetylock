@@ -160,6 +160,13 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
 
+        var blockGrandCompanySealExchange = configuration.BlockGrandCompanySealExchange;
+        if (ImGui.Checkbox("Block Grand Company Seal Exchange", ref blockGrandCompanySealExchange))
+        {
+            configuration.BlockGrandCompanySealExchange = blockGrandCompanySealExchange;
+            configuration.Save();
+        }
+
         if (!configuration.LockEnabled)
         {
             ImGui.EndDisabled();

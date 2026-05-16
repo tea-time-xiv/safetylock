@@ -57,21 +57,17 @@ public sealed class AdditionalChambersWatcher : IDisposable
                 var entryText = popupMenu->EntryNames[i];
                 var text = entryText.ToString();
                 
-                // Check if this entry contains indicators of the additional chambers menu
-                if (text.Contains("private chambers", StringComparison.OrdinalIgnoreCase) ||
-                    text.Contains("company workshop", StringComparison.OrdinalIgnoreCase))
+                if (Localization.ContainsAny(text, Localization.AdditionalChambers.MatchStrings))
                 {
-                    // This is the additional chambers menu - close it
                     unit->Close(true);
-                    
-                    // Print chat message with 1s cooldown
+
                     var now = DateTime.UtcNow;
                     if ((now - lastChatMessageTime).TotalSeconds >= 1)
                     {
-                        chatGui.Print("Additional chambers access blocked (Safety Lock enabled)");
+                        chatGui.Print(Localization.AdditionalChambers.BlockedMessage);
                         lastChatMessageTime = now;
                     }
-                    
+
                     return;
                 }
             }

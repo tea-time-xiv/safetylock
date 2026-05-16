@@ -83,7 +83,7 @@ public sealed class HousingRetainerWatcher : IDisposable
                 {
                     ((AtkUnitBase*)addon.Address)->Close(true);
                 }
-                chatGui.Print("Housing retainer interaction blocked (Safety Lock enabled)");
+                chatGui.Print(Localization.HousingRetainer.BlockedMessage);
             }
         }
     }

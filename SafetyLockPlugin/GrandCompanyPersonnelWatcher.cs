@@ -54,16 +54,14 @@ public sealed class GrandCompanyPersonnelWatcher : IDisposable
                 var entryText = popupMenu->EntryNames[i];
                 var text = entryText.ToString();
 
-                // EN strings confirmed in-game. DE/FR/JP unverified — add once captured via /xllog.
-                if (text.Contains("Undertake supply and provisioning missions", StringComparison.OrdinalIgnoreCase) ||
-                    text.Contains("Apply for transfer", StringComparison.OrdinalIgnoreCase))
+                if (Localization.ContainsAny(text, Localization.GrandCompanyPersonnel.MatchStrings))
                 {
                     unit->Close(true);
 
                     var now = DateTime.UtcNow;
                     if ((now - lastChatMessageTime).TotalSeconds >= 1)
                     {
-                        chatGui.Print("Grand Company personnel interaction blocked (Safety Lock enabled)");
+                        chatGui.Print(Localization.GrandCompanyPersonnel.BlockedMessage);
                         lastChatMessageTime = now;
                     }
 

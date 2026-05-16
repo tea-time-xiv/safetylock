@@ -47,7 +47,7 @@ public sealed class ArmoireWatcher : IDisposable
         {
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
-        chatGui.Print("Armoire blocked (Safety Lock enabled)");
+        chatGui.Print(Localization.Armoire.BlockedMessage);
     }
 
     public void Dispose()

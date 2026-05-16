@@ -72,13 +72,10 @@ public sealed class HousingFoodWatcher : IDisposable
                 // Normalize the text: trim whitespace
                 var normalized = text.Trim();
                 
-                // Check if this text node starts with "Partake of the" (handle both correct spelling and typo variant)
-                if (normalized.StartsWith("Partake of the", StringComparison.OrdinalIgnoreCase) ||
-                    normalized.StartsWith("Parttake of the", StringComparison.OrdinalIgnoreCase))
+                if (Localization.StartsWithAny(normalized, Localization.HousingFood.MatchStrings))
                 {
-                    // This is a housing food confirmation - close it
                     unit->Close(true);
-                    chatGui.Print("Housing food consumption blocked (Safety Lock enabled)");
+                    chatGui.Print(Localization.HousingFood.BlockedMessage);
                     return;
                 }
             }

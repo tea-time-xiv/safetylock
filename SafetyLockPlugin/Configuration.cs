@@ -28,6 +28,7 @@ public class Configuration : IPluginConfiguration
     public bool BlockAdditionalChambers { get; set; } = true;
     public bool BlockHousingPictureFrames { get; set; } = true;
     public bool BlockGrandCompanyPersonnel { get; set; } = true;
+    public bool BlockGrandCompanySealExchange { get; set; } = true;
 
     // The below exists just to make saving less cumbersome
     public void Save()

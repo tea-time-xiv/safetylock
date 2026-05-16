@@ -48,7 +48,7 @@ public sealed class VendorWatcher : IDisposable
         {
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
-        chatGui.Print("Vendor interaction blocked (Safety Lock enabled)");
+        chatGui.Print(Localization.Vendor.BlockedMessage);
     }
 
     public void Dispose()

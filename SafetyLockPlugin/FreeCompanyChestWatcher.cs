@@ -47,7 +47,7 @@ public sealed class FreeCompanyChestWatcher : IDisposable
         {
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
-        chatGui.Print("Free Company Chest interaction blocked (Safety Lock enabled)");
+        chatGui.Print(Localization.FreeCompanyChest.BlockedMessage);
     }
 
     public void Dispose()

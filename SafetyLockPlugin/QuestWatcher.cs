@@ -46,7 +46,7 @@ public sealed class QuestWatcher : IDisposable
         {
             ((FFXIVClientStructs.FFXIV.Component.GUI.AtkUnitBase*)addon.Address)->Close(true);
         }
-        chatGui.Print("Quest interaction blocked (Safety Lock enabled)");
+        chatGui.Print(Localization.Quest.BlockedMessage);
     }
 
     public void Dispose()

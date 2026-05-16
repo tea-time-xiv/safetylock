@@ -57,21 +57,17 @@ public sealed class HousingPictureFrameWatcher : IDisposable
                 var entryText = popupMenu->EntryNames[i];
                 var text = entryText.ToString();
                 
-                // Check if this entry contains indicators of the picture frame menu
-                if (text.Contains("Angler's Print", StringComparison.OrdinalIgnoreCase) ||
-                    text.Contains("On Display:", StringComparison.OrdinalIgnoreCase))
+                if (Localization.ContainsAny(text, Localization.HousingPictureFrame.MatchStrings))
                 {
-                    // This is the picture frame menu - close it
                     unit->Close(true);
-                    
-                    // Print chat message with 1s cooldown
+
                     var now = DateTime.UtcNow;
                     if ((now - lastChatMessageTime).TotalSeconds >= 1)
                     {
-                        chatGui.Print("Housing picture frame access blocked (Safety Lock enabled)");
+                        chatGui.Print(Localization.HousingPictureFrame.BlockedMessage);
                         lastChatMessageTime = now;
                     }
-                    
+
                     return;
                 }
             }

@@ -71,7 +71,7 @@ public sealed class LevequestWatcher : IDisposable
         // Set debounce flag
         hasBlockedLeve = true;
         
-        chatGui.Print("Levequest acceptance blocked (Safety Lock enabled)");
+        chatGui.Print(Localization.Levequest.BlockedMessage);
     }
 
 

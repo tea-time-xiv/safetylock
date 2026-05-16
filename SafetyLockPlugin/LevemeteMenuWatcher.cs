@@ -57,23 +57,17 @@ public sealed class LevemeteMenuWatcher : IDisposable
                 var entryText = popupMenu->EntryNames[i];
                 var text = entryText.ToString();
                 
-                // Check if this entry contains indicators of the Levemete menu
-                if (text.Contains("Battlecraft Leves", StringComparison.OrdinalIgnoreCase) ||
-                    text.Contains("Fieldcraft Leves", StringComparison.OrdinalIgnoreCase) ||
-                    text.Contains("Tradecraft Leves", StringComparison.OrdinalIgnoreCase) ||
-                    text.Contains("Information on leves", StringComparison.OrdinalIgnoreCase))
+                if (Localization.ContainsAny(text, Localization.LevemeteMenu.MatchStrings))
                 {
-                    // This is the Levemete menu - close it
                     unit->Close(true);
-                    
-                    // Print chat message with 1s cooldown
+
                     var now = DateTime.UtcNow;
                     if ((now - lastChatMessageTime).TotalSeconds >= 1)
                     {
-                        chatGui.Print("Levequest interaction blocked (Safety Lock enabled)");
+                        chatGui.Print(Localization.LevemeteMenu.BlockedMessage);
                         lastChatMessageTime = now;
                     }
-                    
+
                     return;
                 }
             }
