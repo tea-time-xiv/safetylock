@@ -153,6 +153,13 @@ public class ConfigWindow : Window, IDisposable
             configuration.Save();
         }
 
+        var blockGrandCompanyPersonnel = configuration.BlockGrandCompanyPersonnel;
+        if (ImGui.Checkbox("Block Grand Company Personnel Officer", ref blockGrandCompanyPersonnel))
+        {
+            configuration.BlockGrandCompanyPersonnel = blockGrandCompanyPersonnel;
+            configuration.Save();
+        }
+
         if (!configuration.LockEnabled)
         {
             ImGui.EndDisabled();

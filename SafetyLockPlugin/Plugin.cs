@@ -40,6 +40,7 @@ public sealed class Plugin : IDalamudPlugin
     private AdditionalChambersWatcher AdditionalChambersWatcher { get; init; }
     private HousingPictureFrameWatcher HousingPictureFrameWatcher { get; init; }
     private LevemeteMenuWatcher LevemeteMenuWatcher { get; init; }
+    private GrandCompanyPersonnelWatcher GrandCompanyPersonnelWatcher { get; init; }
 
     // Track spam command executions
     private readonly List<DateTime> spamCommandTimestamps = new();
@@ -72,6 +73,7 @@ public sealed class Plugin : IDalamudPlugin
         AdditionalChambersWatcher = new AdditionalChambersWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
         HousingPictureFrameWatcher = new HousingPictureFrameWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
         LevemeteMenuWatcher = new LevemeteMenuWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
+        GrandCompanyPersonnelWatcher = new GrandCompanyPersonnelWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
 
         CommandManager.AddHandler(SafetyLockCommandName, new CommandInfo(OnSafetyLockCommand)
         {
@@ -112,6 +114,7 @@ public sealed class Plugin : IDalamudPlugin
         AdditionalChambersWatcher.Dispose();
         HousingPictureFrameWatcher.Dispose();
         LevemeteMenuWatcher.Dispose();
+        GrandCompanyPersonnelWatcher.Dispose();
 
         CommandManager.RemoveHandler(SafetyLockCommandName);
         CommandManager.RemoveHandler(SafetyLockSpamCommandName);
