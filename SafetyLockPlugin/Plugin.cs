@@ -70,7 +70,7 @@ public sealed class Plugin : IDalamudPlugin
         FreeCompanyChestWatcher = new FreeCompanyChestWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
         HousingFoodWatcher = new HousingFoodWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
         LevequestWatcher = new LevequestWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
-        HousingRetainerWatcher = new HousingRetainerWatcher(AddonLifecycle, GameGui, ChatGui, TargetManager, Configuration);
+        HousingRetainerWatcher = new HousingRetainerWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
         AdditionalChambersWatcher = new AdditionalChambersWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
         HousingPictureFrameWatcher = new HousingPictureFrameWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);
         LevemeteMenuWatcher = new LevemeteMenuWatcher(AddonLifecycle, GameGui, ChatGui, Configuration);

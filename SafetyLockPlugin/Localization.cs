@@ -147,7 +147,7 @@ public static class Localization
     {
         public static string BlockedMessage => Lang switch
         {
-            _ => "Housing retainer interaction blocked (Safety Lock enabled)",
+            _ => "Retainer interaction blocked (Safety Lock enabled)",
         };
     }
 

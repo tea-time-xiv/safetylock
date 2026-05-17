@@ -133,7 +133,7 @@ public class ConfigWindow : Window, IDisposable
         }
 
         var blockHousingRetainers = configuration.BlockHousingRetainers;
-        if (ImGui.Checkbox("Block Housing Retainers", ref blockHousingRetainers))
+        if (ImGui.Checkbox("Block Summoning Bell / Retainers", ref blockHousingRetainers))
         {
             configuration.BlockHousingRetainers = blockHousingRetainers;
             configuration.Save();
