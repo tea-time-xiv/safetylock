@@ -42,7 +42,7 @@ Configuration options:
 
 ## Installation
 
-1. Add the custom repo to Dalamud: `https://raw.githubusercontent.com/tea-time-xiv/safetylock/master/pluginmaster.json`
+1. Add the custom repo to Dalamud: `https://raw.githubusercontent.com/tea-time-xiv/pluginmaster/master/pluginmaster.json`
 2. Install via the Dalamud plugin installer in XIVLauncher.
 
 ## Prerequisites
