@@ -65,6 +65,17 @@ Output: `SafetyLockPlugin/bin/x64/Release/`
 2. Use `/xlplugins` → Dev Tools → Installed Dev Plugins, enable the plugin.
 3. Use `/safetylock` to toggle Safety Lock.
 
+## Releasing
+
+1. Bump `<Version>` in the csproj and add the matching `## <version>` section to
+   `CHANGELOG.md`. CI fails the build without one — that section becomes both the GitHub
+   release notes and the in-game changelog.
+2. Merge to `master`. CI builds, tags `v<version>` and publishes the GitHub release.
+3. The Tea Time plugin repo picks the release up within 15 minutes. To publish at once, run
+   its *Publish pluginmaster* workflow: `gh workflow run publish.yml -R tea-time-xiv/pluginmaster`,
+   or the **Run workflow** button on that repo's Actions tab. This repo holds no credential
+   for it.
+
 ## License
 
 AGPL-3.0-or-later. See [LICENSE.md](LICENSE.md) for details.

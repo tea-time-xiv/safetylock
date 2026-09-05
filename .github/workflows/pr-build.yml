@@ -6,36 +6,46 @@ on:
   push:
     branches: [ master ]
 
+# Read-only by default: a pull request build has no business writing to the repo.
+# Only the release job, which never runs for a pull request, is granted write.
 permissions:
-  contents: write
+  contents: read
 
 jobs:
 
   build:
     runs-on: windows-2022
 
-    env:
-      Solution_Name: SafetyLockPlugin
+    defaults:
+      run:
+        shell: pwsh
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      skip_release: ${{ steps.tag.outputs.skip }}
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
 
     - name: Read version from csproj
+      id: version
       run: |
         $version = ([xml](Get-Content "SafetyLockPlugin/SafetyLockPlugin.csproj")).Project.PropertyGroup.Version
         "VERSION=$version" >> $env:GITHUB_ENV
+        "version=$version" >> $env:GITHUB_OUTPUT
 
     - name: Check if release tag exists
+      id: tag
       run: |
         git fetch --tags
         $tag = "v$env:VERSION"
         $exists = git tag -l $tag
         $skip = if ($exists) { "true" } else { "false" }
-        "SKIP_RELEASE=$skip" >> $env:GITHUB_ENV
+        "skip=$skip" >> $env:GITHUB_OUTPUT
 
     - name: Install .NET
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
       with:
         dotnet-version: 10.0.x
 
@@ -53,60 +63,59 @@ jobs:
         Compress-Archive -Path "SafetyLockPlugin.dll", "SafetyLockPlugin.json", "images" -DestinationPath "$env:GITHUB_WORKSPACE\SafetyLockPlugin.zip"
         Pop-Location
 
+    # Runs for pull requests too, so a version bump without a changelog entry fails
+    # before it is merged rather than at release time.
+    - name: Extract release notes
+      run: |
+        $ErrorActionPreference = "Stop"
+
+        # The same section ends up in the in-game changelog, via the plugin repo generator.
+        $changelog = Get-Content "CHANGELOG.md" -Raw
+        $pattern = "(?ms)^##\s+\[?" + [regex]::Escape($env:VERSION) + "\]?(?![\d.])[^\r\n]*\r?\n(.*?)(?=^##\s|\z)"
+        $match = [regex]::Match($changelog, $pattern)
+        if (-not $match.Success -or -not $match.Groups[1].Value.Trim()) {
+            throw "CHANGELOG.md has no section for $env:VERSION. Add one before releasing."
+        }
+        Set-Content "notes.md" $match.Groups[1].Value.Trim() -Encoding utf8NoBOM
+
     - name: Store artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
       with:
         name: SafetyLockPlugin
-        path: SafetyLockPlugin.zip
+        path: |
+          SafetyLockPlugin.zip
+          notes.md
         if-no-files-found: error
         retention-days: 1
 
-    - name: Release
-      if: github.event_name == 'push' && env.SKIP_RELEASE == 'false'
-      uses: ncipollo/release-action@v1
+  release:
+    needs: build
+    if: github.event_name == 'push' && needs.build.outputs.skip_release == 'false'
+    runs-on: ubuntu-latest
+
+    # The only job in this repo that may write, and it cannot run for a pull request.
+    permissions:
+      contents: write
+
+    steps:
+    - name: Download build output
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
       with:
+        name: SafetyLockPlugin
+
+    - name: Release
+      uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
+      with:
+        # The release job does not check the repo out, so the action needs to be told
+        # which commit to hang the new tag on.
+        commit: ${{ github.sha }}
         artifacts: "SafetyLockPlugin.zip"
-        tag: v${{ env.VERSION }}
-        name: Safety Lock v${{ env.VERSION }}
+        tag: v${{ needs.build.outputs.version }}
+        name: Safety Lock v${{ needs.build.outputs.version }}
+        bodyFile: notes.md
         token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Update pluginmaster
-      if: github.event_name == 'push' && env.SKIP_RELEASE == 'false'
-      shell: pwsh
-      env:
-        PLUGINMASTER_TOKEN: ${{ secrets.PLUGINMASTER_TOKEN }}
-      run: |
-        git clone https://x-access-token:$env:PLUGINMASTER_TOKEN@github.com/tea-time-xiv/pluginmaster.git pluginmaster-repo
-        $version = $env:VERSION
-        $downloadUrl = "https://github.com/tea-time-xiv/safetylock/releases/download/v$version/SafetyLockPlugin.zip"
-        $lastUpdate = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
-        $entry = [ordered]@{
-            Author             = "tea-time-xiv"
-            Name               = "Safety Lock"
-            Punchline          = "Soft Safety Lock to prevent accidental in-game interactions"
-            Description        = "Blocks vendor windows, duty finder interactions, and quest acceptance dialogs when enabled. Use /safetylock to toggle. Features enable-on-startup and individual feature toggles."
-            Changelog          = "- $version"
-            IsHide             = $false
-            InternalName       = "SafetyLockPlugin"
-            AssemblyVersion    = $version
-            IsTestingExclusive = $false
-            ApplicableVersion  = "any"
-            DalamudApiLevel    = 15
-            DownloadCount      = 0
-            LastUpdate         = $lastUpdate
-            DownloadLinkInstall = $downloadUrl
-            DownloadLinkUpdate  = $downloadUrl
-        }
-        $existing = Get-Content "pluginmaster-repo/pluginmaster.json" | ConvertFrom-Json
-        $filtered = @($existing | Where-Object { $_.InternalName -ne "SafetyLockPlugin" })
-        $merged = $filtered + @($entry)
-        $json = $merged | ConvertTo-Json -Depth 3
-        Set-Content "pluginmaster-repo/pluginmaster.json" $json -Encoding utf8NoBOM
-        Push-Location pluginmaster-repo
-        git symbolic-ref HEAD refs/heads/master
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        git add pluginmaster.json
-        git commit -m "Release v$version"
-        git push -u origin master
-        Pop-Location
+    # The Tea Time plugin repo builds pluginmaster.json itself, from this repo's latest
+    # release and the manifest inside its zip. It holds no credential for this repo and
+    # this repo holds none for it: its schedule picks the release up within 15 minutes,
+    # or run its "Publish pluginmaster" workflow by hand to publish at once.
